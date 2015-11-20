@@ -50,7 +50,7 @@ public class ServerMonitor {
 		cam.getTime(time, 0);
 		byte motion = 0;
 		Integer a = jpeg.length + time.length + 1 + Integer.BYTES;
-		byte length = a.byteValue(); 
+		byte length = a.byteValue(); //Bilden kan vara varierande längd
 		
 		lastImage = System.currentTimeMillis();
 		
