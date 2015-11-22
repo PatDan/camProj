@@ -1,15 +1,18 @@
 package client;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 public class FrameGUI extends JFrame {
@@ -26,37 +29,58 @@ public class FrameGUI extends JFrame {
 	private VideoPanel videoFrame2 = new VideoPanel();
 
 	public FrameGUI() {
+		setUIFont(new javax.swing.plaf.FontUIResource("Roboto",Font.BOLD,15));
 		jui.setPreferredSize(new Dimension(20,40));
+		jui.setLayout(new GridLayout(8,0));
 		jui.setBorder(new EmptyBorder(10, 10, 10, 10));
-		this.setLayout(new GridBagLayout());
-		add(vui);
-		add(jui);
-	
+		this.setLayout(new BorderLayout(0,2));
 		syncCheck = new JCheckBox[syncBoxes.length];
 		movieCheck = new JCheckBox[movieBoxes.length];
-
+		jui.setBackground(Color.gray);
 		vui.add(videoFrame1);
 		vui.add(videoFrame2);
+		vui.setPreferredSize(new Dimension(1280,480));
+
+	
 		
+		jui.add(new JLabel("Sync mode"));
+		setUIFont(new javax.swing.plaf.FontUIResource("Roboto",Font.BOLD,12));
 		for (int i = 0; i < syncBoxes.length; i++) {
             createCheckBoxes(i, syncBoxes, syncCheck, bgSync);
         }
+		setUIFont(new javax.swing.plaf.FontUIResource("Roboto",Font.BOLD,15));
+		jui.add(new JLabel("Movie mode"));
+		setUIFont(new javax.swing.plaf.FontUIResource("Roboto",Font.BOLD,12));
 		for (int i = 0; i < movieBoxes.length; i++) {
             createCheckBoxes(i, movieBoxes, movieCheck, bgMovie);
         }
 
+		add(vui, BorderLayout.LINE_START);
 		
+		add(jui);
+	
 		setTitle("Camera Viewer");
 		pack();
-		setSize(1300, 1000);
+		setSize(1450, 480);
 		setVisible(true);
-		setResizable(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 	}
+	
+	public static void setUIFont (javax.swing.plaf.FontUIResource f){
+	    java.util.Enumeration keys = UIManager.getDefaults().keys();
+	    while (keys.hasMoreElements()) {
+	      Object key = keys.nextElement();
+	      Object value = UIManager.get (key);
+	      if (value != null && value instanceof javax.swing.plaf.FontUIResource)
+	        UIManager.put (key, f);
+	      }
+	    } 
 	public void createCheckBoxes(int i, String [] names, JCheckBox boxes[], ButtonGroup bg){
 	  boxes[i] = new JCheckBox(names[i]);
-      boxes[i].setBorder(new EmptyBorder(0,i*30,0,0));
+      boxes[i].setBorder(new EmptyBorder(0,0,0,0));
+      boxes[i].setBackground(Color.gray);
       bg.add(boxes[i]);
       jui.add(boxes[i]);
 	}
