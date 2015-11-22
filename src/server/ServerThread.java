@@ -23,8 +23,7 @@ public class ServerThread extends Thread {
 			Socket clientSocket = serverSocket.accept();
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			monitor.setInput(in);
-			monitor.setOutput(out);
+			monitor.connect(in, out);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
