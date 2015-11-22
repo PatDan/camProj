@@ -73,7 +73,7 @@ public class ServerMonitor {
 		
 		lastImage = System.currentTimeMillis();
 		
-		System.out.println(Arrays.toString(msg));
+		System.out.println("ServerMonitor: msg size: " + msg.length);
 
 		return msg;
 	}

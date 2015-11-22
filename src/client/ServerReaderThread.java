@@ -16,20 +16,29 @@ public class ServerReaderThread extends Thread {
 
 	public void run() {
 //		while(true) {
-			byte[] msg = new byte[4096*8];
-			int pos = 0;
+			byte[] l = new byte[4];
 			try {
-				pos = in.read(msg);
+				l[0] = (byte)in.read();
+				l[1] = (byte)in.read();
+				l[2] = (byte)in.read();
+				l[3] = (byte)in.read();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("pos " + pos);
-			System.out.println("msg.length: " + msg.length);
-			msg = trim(msg, pos);
-			System.out.println("msg.length: " + msg.length);
 			
-			System.out.println(Arrays.toString(msg));
+			int size = byteToInt(l);
+			
+			System.out.println("size " + size);
+			byte[] msg = new byte[size];
+			try {
+				in.read(msg, 0, size);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println("ServerReader: msg.length: " + msg.length);
 //		}
 	}
 	
@@ -40,6 +49,14 @@ public class ServerReaderThread extends Thread {
 			trimedArray[i] = array[i];
 		}
 		return trimedArray;
+	}
+	
+	private int byteToInt(byte[] data) {
+		int i= (data[0]<<24)&0xff000000|
+			       (data[1]<<16)&0x00ff0000|
+			       (data[2]<< 8)&0x0000ff00|
+			       (data[3]<< 0)&0x000000ff;
+		return i;
 	}
 
 }

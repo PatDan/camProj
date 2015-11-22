@@ -16,7 +16,13 @@ public class ServerWriterThread extends Thread{
 	public void run() {
 //		while(true) {
 			try {
-				out.write(monitor.image());
+				byte[] msg = monitor.image();
+				out.write(msg[0]);
+				out.write(msg[1]);
+				out.write(msg[2]);
+				out.write(msg[3]);
+				out.write(msg,4,msg.length-4);
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
