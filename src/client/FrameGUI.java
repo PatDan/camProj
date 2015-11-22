@@ -34,7 +34,7 @@ public class FrameGUI extends JFrame {
 
 	public FrameGUI(ClientMonitor cm) {
 		this.cm = cm;
-		setUIFont(new javax.swing.plaf.FontUIResource("Roboto", Font.BOLD, 15));
+		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 15));
 		jui.setPreferredSize(new Dimension(20, 40));
 		jui.setLayout(new GridLayout(8, 0));
 		jui.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -48,16 +48,16 @@ public class FrameGUI extends JFrame {
 
 		jui.add(new JLabel("Sync mode"));
 
-		setUIFont(new javax.swing.plaf.FontUIResource("Roboto", Font.BOLD, 12));
+		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 12));
 		isMode = true;
 		for (int i = 0; i < syncBoxes.length; i++) {
 			createCheckBoxes(i, syncBoxes, syncCheck, bgSync);
 		}
 
-		setUIFont(new javax.swing.plaf.FontUIResource("Roboto", Font.BOLD, 15));
+		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 15));
 		jui.add(new JLabel("Movie mode"));
 
-		setUIFont(new javax.swing.plaf.FontUIResource("Roboto", Font.BOLD, 12));
+		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 12));
 		isMode = false;
 		for (int i = 0; i < movieBoxes.length; i++) {
 			createCheckBoxes(i, movieBoxes, movieCheck, bgMovie);
@@ -115,6 +115,8 @@ public class FrameGUI extends JFrame {
 				ClientMonitor am = new ClientMonitor();
 				FrameGUI frame = new FrameGUI(am);
 				frame.sendImage(am.getImage(),1);
+
+			
 			
 			}
 		};
