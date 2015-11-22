@@ -1,33 +1,35 @@
 package client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
-import server.ServerMonitor;
-
-public class ClientThread {
+public class ClientThread extends Thread{
 	private int port;
 	private ClientMonitor monitor;
 	private String hostName;
+	private Socket clientSocket;
 	
 	public ClientThread(ClientMonitor monitor, int port, String hostName) {
 		this.port = port;
 		this.monitor = monitor;
 		this.hostName = hostName;
+
+		System.out.println("Connecting to server");
+		try {
+			clientSocket = new Socket("localhost", port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void run() {
 		try {
-			Socket kkSocket = new Socket(hostName, port);
-			PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
-		    BufferedReader in = new BufferedReader(
-		        new InputStreamReader(kkSocket.getInputStream()));
-		    monitor.setInput(in);
-		    monitor.setOutput(out);
+			OutputStream out = clientSocket.getOutputStream();
+		    InputStream in = clientSocket.getInputStream();
+		    monitor.connect(in, out);
 		} catch (IOException e) {
 			
 		}
