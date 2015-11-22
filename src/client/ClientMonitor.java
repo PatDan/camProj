@@ -1,9 +1,10 @@
 package client;
 
-import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+
+import Util.Util;
 
 public class ClientMonitor {
 	public static final int PORT_NUMBER = 8080;
@@ -36,7 +37,42 @@ public class ClientMonitor {
 		this.sync = sync;
 	}
 
-	synchronized void putImage(byte[] image) {
+	synchronized void readImage(InputStream in) {
+		byte[] l = new byte[4];
+		try {
+			l[0] = (byte)in.read();
+			l[1] = (byte)in.read();
+			l[2] = (byte)in.read();
+			l[3] = (byte)in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int size = Util.byteToInt(l);
+		
+		System.out.println("size " + size);
+		byte[] msg = new byte[size];
+		try {
+			in.read(msg, 0, size);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Kom ihåg att hämta ut tiden! kanske ska överväga image-klass ändå
+		byte[] image = new byte[msg.length-9];
+		for(int i = 9; i < msg.length; i++) {
+			image[i-9] = msg[i];
+		}
+		
+		putImage(image);
+		
+		
+		System.out.println("ServerReader: msg.length: " + msg.length);
+	}
+	
+	private void putImage(byte[] image) {
 		this.image = image;
 		System.out.println("ClientMonitor image.length: " + image.length);
 	}

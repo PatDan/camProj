@@ -2,8 +2,8 @@ package server;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 
+import Util.Util;
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
 
 public class ServerMonitor {
@@ -56,7 +56,7 @@ public class ServerMonitor {
 		jpeg = trim(jpeg, pos);
 		System.out.println("ServerMonitor: jpeg.length: " + jpeg.length);
 		int length = jpeg.length + time.length+1;
-		byte[] blength = intToByteArray(length);
+		byte[] blength = Util.intToByteArray(length);
 		byte[] msg = new byte[blength.length+length];
 		for(int i = 0; i < blength.length; i++) {
 			msg[i] = blength[i];
@@ -120,25 +120,5 @@ public class ServerMonitor {
 		// System.out.println(image.length);
 
 		// System.out.println(Arrays.toString(image));
-	}
-
-	private byte[] intToByteArray(int data) {
-
-		byte[] result = new byte[4];
-
-		result[0] = (byte) ((data & 0xFF000000) >> 24);
-		result[1] = (byte) ((data & 0x00FF0000) >> 16);
-		result[2] = (byte) ((data & 0x0000FF00) >> 8);
-		result[3] = (byte) ((data & 0x000000FF) >> 0);
-
-		return result;
-	}
-	
-	private int byteToInt(byte[] data) {
-		int i= (data[0]<<24)&0xff000000|
-			       (data[1]<<16)&0x00ff0000|
-			       (data[2]<< 8)&0x0000ff00|
-			       (data[3]<< 0)&0x000000ff;
-		return i;
 	}
 }
