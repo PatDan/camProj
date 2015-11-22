@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 
 
 public class ClientMonitor {
-	public static final int PORT_NUMBER = 0;
+	public static final int PORT_NUMBER = 8080;
 	
 	synchronized void setInput(BufferedReader in) {
 		new ServerReaderThread(this, in).start();
