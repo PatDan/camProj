@@ -54,6 +54,7 @@ public class ServerMonitor {
 		cam.getTime(time, 0);
 		byte motion = (byte) (motionDetected ? 1 : 0);
 		jpeg = trim(jpeg, pos);
+		System.out.println("ServerMonitor: jpeg.length: " + jpeg.length);
 		int length = jpeg.length + time.length+1;
 		byte[] blength = intToByteArray(length);
 		byte[] msg = new byte[blength.length+length];

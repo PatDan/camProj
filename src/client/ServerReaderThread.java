@@ -38,6 +38,14 @@ public class ServerReaderThread extends Thread {
 				e.printStackTrace();
 			}
 			
+			byte[] image = new byte[msg.length-9];
+			for(int i = 9; i < msg.length; i++) {
+				image[i-9] = msg[i];
+			}
+			
+			clientMonitor.putImage(image);
+			
+			
 			System.out.println("ServerReader: msg.length: " + msg.length);
 //		}
 	}
