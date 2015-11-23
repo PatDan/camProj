@@ -40,38 +40,42 @@ public class ClientMonitor {
 	synchronized void readImage(InputStream in) {
 		byte[] l = new byte[4];
 		try {
-			l[0] = (byte)in.read();
-			l[1] = (byte)in.read();
-			l[2] = (byte)in.read();
-			l[3] = (byte)in.read();
+			l[0] = (byte) in.read();
+			l[1] = (byte) in.read();
+			l[2] = (byte) in.read();
+			l[3] = (byte) in.read();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		int size = Util.byteToInt(l);
-		
+
 		System.out.println("size " + size);
 		byte[] msg = new byte[size];
+		int read = 0;
 		try {
-			in.read(msg, 0, size);
+			while (read != size) {
+				int n = in.read(msg, read, size - read);
+				if(n == -1) throw new IOException();
+				read += n;
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//Kom ihåg att hämta ut tiden! kanske ska överväga image-klass ändå
-		byte[] image = new byte[msg.length-9];
-		for(int i = 9; i < msg.length; i++) {
-			image[i-9] = msg[i];
+
+		// Kom ihåg att hämta ut tiden! kanske ska överväga image-klass ändå
+		byte[] image = new byte[msg.length - 9];
+		for (int i = 9; i < msg.length; i++) {
+			image[i - 9] = msg[i];
 		}
-		
+
 		putImage(image);
-		
-		
+
 		System.out.println("ServerReader: msg.length: " + msg.length);
 	}
-	
+
 	private void putImage(byte[] image) {
 		this.image = image;
 		System.out.println("ClientMonitor image.length: " + image.length);
