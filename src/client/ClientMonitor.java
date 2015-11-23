@@ -16,12 +16,12 @@ public class ClientMonitor {
 
 	private int mode = AUTO;
 	private int sync = AUTO;
-	private byte[] image;
+	private Picture image;
 
 	public ClientMonitor() {
 		System.out.println("Starting client thread");
 		new ClientThread(this, PORT_NUMBER, "Hello").start();
-		image = new byte[0];
+		image = null;
 	}
 
 	synchronized void connect(InputStream in, OutputStream out) {
@@ -64,34 +64,46 @@ public class ClientMonitor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		byte motion = msg[0];
+		
+		byte[] time = new byte[8];
+		
+		for(int i = 1; i < 9; i++) {
+			time[i-1] = msg[i];
+		}
+		
+		System.out.println("ClientMonitor MotionDetection: " + motion);
+		System.out.println("ClientMonitor timestamp: " + Util.byteToLong(time));
 
-		// Kom ihåg att hämta ut tiden! kanske ska överväga image-klass ändå
+		// Kom ihï¿½g att hï¿½mta ut tiden! kanske ska ï¿½vervï¿½ga image-klass ï¿½ndï¿½
 		byte[] image = new byte[msg.length - 9];
 		for (int i = 9; i < msg.length; i++) {
 			image[i - 9] = msg[i];
 		}
 
-		putImage(image);
+		Picture p = new Picture(image, motion, Util.byteToLong(time));
+		putImage(p);
 
 		System.out.println("ServerReader: msg.length: " + msg.length);
 	}
 
-	private void putImage(byte[] image) {
+	private void putImage(Picture image) {
 		this.image = image;
-		System.out.println("ClientMonitor image.length: " + image.length);
+		System.out.println("ClientMonitor image.length: " + image.getImage().length);
 	}
 
-	synchronized byte[] getImage() {
+	synchronized Picture getImage() {
 		try {
-			while (image.length == 0)
+			while (image == null)
 				wait();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Returning image");
-		byte[] ret = image;
-		image = new byte[0];
+		Picture ret = image;
+		image = null;
 		return ret;
 	}
 }

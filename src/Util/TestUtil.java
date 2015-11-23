@@ -12,7 +12,7 @@ public class TestUtil {
 		long b = System.currentTimeMillis();
 		System.out.println(b);
 		byte[] bb = Util.longToByteArray(b);
-		long b2 = Util.byteTolong(bb);
+		long b2 = Util.byteToLong(bb);
 		System.out.println(b2);
 		
 	}

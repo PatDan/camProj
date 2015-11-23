@@ -37,7 +37,7 @@ public class Util {
 		return array;
 	}
 	
-	public static long byteTolong(byte[] data) {
+	public static long byteToLong(byte[] data) {
 		long value = 0;
 		for (int i = 0; i < data.length; i++)
 		{
