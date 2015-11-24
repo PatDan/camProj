@@ -54,7 +54,7 @@ public class ServerMonitor {
 		cam.getTime(time, 0);
 		byte motion = (byte) (motionDetected ? 1 : 0);
 		jpeg = trim(jpeg, pos);
-		System.out.println("ServerMonitor: jpeg.length: " + jpeg.length);
+//		System.out.println("ServerMonitor: jpeg.length: " + jpeg.length);
 		int length = jpeg.length + time.length+1;
 		byte[] blength = Util.intToByteArray(length);
 		byte[] msg = new byte[blength.length+length];
@@ -74,7 +74,7 @@ public class ServerMonitor {
 		
 		lastImage = System.currentTimeMillis();
 		
-		System.out.println("ServerMonitor: msg size: " + msg.length);
+//		System.out.println("ServerMonitor: msg size: " + msg.length);
 
 		return msg;
 	}
@@ -114,8 +114,8 @@ public class ServerMonitor {
 			image[i] = jpeg[i];
 		}
 		
-		System.out.println(length);
-		System.out.println(image.length);
+//		System.out.println(length);
+//		System.out.println(image.length);
 
 		// System.out.println(image.length);
 

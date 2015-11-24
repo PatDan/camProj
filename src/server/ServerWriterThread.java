@@ -14,7 +14,7 @@ public class ServerWriterThread extends Thread{
 	}
 
 	public void run() {
-//		while(true) {
+		while(true) {
 			try {
 				byte[] msg = monitor.image();
 				out.write(msg[0]);
@@ -27,6 +27,6 @@ public class ServerWriterThread extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//		}
+		}
 	}
 }

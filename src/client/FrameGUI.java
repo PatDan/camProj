@@ -113,11 +113,6 @@ public class FrameGUI extends JFrame {
 			public void run() {
 				ServerMonitor sm = new ServerMonitor();
 				ClientMonitor am = new ClientMonitor();
-				FrameGUI frame = new FrameGUI(am);
-				Picture p = am.getImage();
-				frame.sendImage(p.getImage(),1);
-				System.out.println("FrameGUI timestamp: " + p.getTime());
-
 			
 			
 			}
