@@ -32,8 +32,9 @@ public class ClientMonitor {
 		new ClientWriterThread(this, out).start();
 	}
 
-	synchronized void updateScreen(byte[] image, int panel) {
-		gui.sendImage(image, panel);
+	synchronized void updateScreen(int panel) {
+		Picture p = getPicture();
+		gui.sendImage(p.getImage(), panel);
 	}
 
 	synchronized void changeMode(int mode) {
@@ -116,7 +117,7 @@ public class ClientMonitor {
 //		System.out.println("ClientMonitor imageBuffer.length: " + imageBuffer.length);
 	}
 
-	synchronized Picture getPicture() {
+	private Picture getPicture() {
 		try {
 			while (imageBuffer.length == 0) {
 //				System.out.println("ClientMonitor getPicture: imageBuffer.length: " + imageBuffer.length);

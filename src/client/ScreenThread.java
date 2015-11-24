@@ -11,9 +11,7 @@ public class ScreenThread extends Thread{
 	
 	public void run() {
 		while(true) {
-			System.out.println("Screen thread running");
-			Picture p = cm.getPicture();
-			cm.updateScreen(p.getImage(), panel);
+			cm.updateScreen(panel);
 		}
 	}
 }

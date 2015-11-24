@@ -72,7 +72,7 @@ public class FrameGUI extends JFrame {
 		setSize(1280, 600);
 		setVisible(true);
 		setResizable(true);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 
