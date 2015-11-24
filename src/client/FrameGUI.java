@@ -21,7 +21,7 @@ public class FrameGUI extends JFrame {
 	private String[] syncBoxes = { "auto", "synchronized", "asynchronized" };
 	private String[] movieBoxes = { "auto", "movie", "idle" };
 
-	JPanel jui = new JPanel(new GridLayout(2, 1));
+	JPanel jui = new JPanel(new GridLayout(1,2));
 	JPanel vui = new JPanel(new GridLayout(1, 2));
 	private JCheckBox syncCheck[];
 	private JCheckBox movieCheck[];
@@ -35,8 +35,8 @@ public class FrameGUI extends JFrame {
 	public FrameGUI(ClientMonitor cm) {
 		this.cm = cm;
 		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 15));
-		jui.setPreferredSize(new Dimension(20, 40));
-		jui.setLayout(new GridLayout(8, 0));
+		jui.setPreferredSize(new Dimension(1280, 100));
+		jui.setLayout(new GridLayout(1,8));
 		jui.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setLayout(new BorderLayout(0, 2));
 		syncCheck = new JCheckBox[syncBoxes.length];
@@ -63,15 +63,15 @@ public class FrameGUI extends JFrame {
 			createCheckBoxes(i, movieBoxes, movieCheck, bgMovie);
 		}
 
-		add(vui, BorderLayout.LINE_START);
+		add(vui, BorderLayout.NORTH);
 
-		add(jui);
+		add(jui, BorderLayout.SOUTH);
 
 		setTitle("Camera Viewer");
 		pack();
-		setSize(1450, 480);
+		setSize(1280, 600);
 		setVisible(true);
-		setResizable(false);
+		setResizable(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 	}
