@@ -10,10 +10,12 @@ import Util.Util;
 public class ServerReaderThread extends Thread {
 	private ClientMonitor clientMonitor;
 	private InputStream in;
+	private int cam;
 
-	public ServerReaderThread(ClientMonitor clientMonitor, InputStream in) {
+	public ServerReaderThread(ClientMonitor clientMonitor, InputStream in, int cam) {
 		this.clientMonitor = clientMonitor;
 		this.in = in;
+		this.cam = cam;
 	}
 
 	public void run() {
@@ -66,7 +68,7 @@ public class ServerReaderThread extends Thread {
 			}
 
 			Picture p = new Picture(image, motion, Util.byteToLong(time));
-			clientMonitor.putImage(p);
+			clientMonitor.putImage(p, cam);
 		}
 	}
 }

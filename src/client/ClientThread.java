@@ -5,12 +5,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ClientThread extends Thread{
+public class ClientThread extends Thread {
 	private int port;
 	private ClientMonitor monitor;
 	private String hostName;
 	private Socket clientSocket;
-	
+
 	public ClientThread(ClientMonitor monitor, int port, String hostName) {
 		this.port = port;
 		this.monitor = monitor;
@@ -18,7 +18,7 @@ public class ClientThread extends Thread{
 
 		System.out.println("Connecting to server");
 		try {
-			clientSocket = new Socket("localhost", port);
+			clientSocket = new Socket("localhost", port++);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -26,13 +26,17 @@ public class ClientThread extends Thread{
 	}
 
 	public void run() {
-		try {
-			OutputStream out = clientSocket.getOutputStream();
-		    InputStream in = clientSocket.getInputStream();
-		    monitor.connect(in, out);
-		} catch (IOException e) {
-			
+		while (port < 8082) {
+			try {
+				OutputStream out = clientSocket.getOutputStream();
+				InputStream in = clientSocket.getInputStream();
+				monitor.connect(in, out);
+				port++;
+				clientSocket = new Socket(hostName, port);
+			} catch (IOException e) {
+				System.err.println("No new camera");
+			}
 		}
-		
+
 	}
 }

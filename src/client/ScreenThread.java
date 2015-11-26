@@ -2,16 +2,17 @@ package client;
 
 public class ScreenThread extends Thread{
 	private ClientMonitor cm;
-	private int panel;
+	private int cam;
 	
-	public ScreenThread(ClientMonitor cm, int panel) {
+	public ScreenThread(ClientMonitor cm, int cam) {
 		this.cm = cm;
-		this.panel = panel;
+		this.cam = cam;
 	}
 	
 	public void run() {
 		while(true) {
-			cm.updateScreen(panel);
+			System.out.println("Screen thread running");
+			cm.updateScreen(cam);
 		}
 	}
 }

@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import Util.Util;
 
 public class ClientMonitor {
-	public static final int PORT_NUMBER = 8080;
+	public static int PORT_NUMBER = 8080;
 	public static final int AUTO = 0;
 	public static final int IDLE = 1;
 	public static final int MOVIE = 2;
@@ -16,24 +16,30 @@ public class ClientMonitor {
 
 	private int mode = AUTO;
 	private int sync = AUTO;
-	private Picture[] imageBuffer;
+	private Picture[] imageBuffer1;
+	private Picture[] imageBuffer2;
 	private FrameGUI gui;
+	private int nextCam;
 
 	public ClientMonitor() {
 //		System.out.println("Starting client thread");
 		gui = new FrameGUI(this);
-		imageBuffer = new Picture[0];
-		new ScreenThread(this, 1).start();
-		new ClientThread(this, PORT_NUMBER, "Hello").start();
+		imageBuffer1 = new Picture[0];
+		imageBuffer2 = new Picture[0];
+		new ClientThread(this, PORT_NUMBER, "localhost").start();
+		nextCam = 1;
 	}
 
 	synchronized void connect(InputStream in, OutputStream out) {
-		new ServerReaderThread(this, in).start();
-		new ClientWriterThread(this, out).start();
+		new ServerReaderThread(this, in, nextCam).start();
+		new ClientWriterThread(this, out, nextCam).start();
+		new ScreenThread(this, nextCam).start();
+		nextCam++;
 	}
 
 	synchronized void updateScreen(int panel) {
-		Picture p = getPicture();
+		System.out.println("ClientMonitor: Updating screen");
+		Picture p = getPicture(panel);
 		gui.sendImage(p.getImage(), panel);
 	}
 
@@ -102,7 +108,17 @@ public class ClientMonitor {
 //		// System.out.println("ServerReader: msg.length: " + msg.length);
 //	}
 
-	synchronized void putImage(Picture image) {
+	synchronized void putImage(Picture image, int cam) {
+		Picture[] imageBuffer = null;
+		switch(cam) {
+		case 1:
+			imageBuffer = imageBuffer1;
+			break;
+		case 2:
+			imageBuffer = imageBuffer2;
+			break;
+		}
+		
 		Picture[] temp = new Picture[imageBuffer.length + 1];
 		for (int i = 0; i < imageBuffer.length; i++) {
 			temp[i] = imageBuffer[i];
@@ -110,18 +126,38 @@ public class ClientMonitor {
 
 		temp[temp.length - 1] = image;
 
-		imageBuffer = temp;
+		switch(cam) {
+		case 1:
+			imageBuffer1 = temp;
+			break;
+		case 2:
+			imageBuffer2 = temp;
+			break;
+		}
 		notifyAll();
 
 //		System.out.println("ClientMonitor image.length: " + image.getImage().length);
 //		System.out.println("ClientMonitor imageBuffer.length: " + imageBuffer.length);
 	}
 
-	private Picture getPicture() {
+	private Picture getPicture(int cam) {
+		Picture[] imageBuffer = null;
 		try {
-			while (imageBuffer.length == 0) {
-//				System.out.println("ClientMonitor getPicture: imageBuffer.length: " + imageBuffer.length);
-				wait();
+			switch(cam) {
+			case 1:
+				while (imageBuffer1.length == 0) {
+//					System.out.println("ClientMonitor getPicture: imageBuffer.length: " + imageBuffer.length);
+					wait();
+				}
+				imageBuffer = imageBuffer1;
+				break;
+			case 2:
+				while (imageBuffer2.length == 0) {
+//					System.out.println("ClientMonitor getPicture: imageBuffer.length: " + imageBuffer.length);
+					wait();
+				}
+				imageBuffer = imageBuffer2;
+				break;
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -136,10 +172,19 @@ public class ClientMonitor {
 			for (int i = 0; i < temp.length; i++) {
 				temp[i] = imageBuffer[i + 1];
 			}
-			this.imageBuffer = temp;
+			imageBuffer = temp;
+		}
+		
+		switch(cam) {
+		case 1:
+			imageBuffer1 = imageBuffer;
+			break;
+		case 2:
+			imageBuffer2 = imageBuffer;
+			break;
 		}
 
-//		System.out.println("ClientMonitor Returning Image");
+		System.out.println("ClientMonitor Returning Image");
 		notifyAll();
 		return ret;
 	}

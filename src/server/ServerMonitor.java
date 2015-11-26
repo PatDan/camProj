@@ -13,6 +13,7 @@ public class ServerMonitor {
 	private long lastImage;
 	private AxisM3006V cam;
 	private boolean connected;
+	private static int camNbr = 0;
 
 	public ServerMonitor() {
 		mode = IDLE_MODE;
@@ -22,7 +23,9 @@ public class ServerMonitor {
 		cam.init();
 		cam.connect();
 		System.out.println("Starting server thread");
-		new ServerThread(this, 8080).start();
+		new ServerThread(this, 8080+camNbr).start();
+		System.out.println("Starting server: " + camNbr);
+		camNbr++;
 	}
 
 	synchronized void connect(InputStream in, OutputStream out) {
