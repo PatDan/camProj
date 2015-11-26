@@ -11,7 +11,6 @@ public class ScreenThread extends Thread{
 	
 	public void run() {
 		while(true) {
-			System.out.println("Screen thread running");
 			cm.updateScreen(cam);
 		}
 	}

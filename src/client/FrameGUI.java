@@ -34,8 +34,8 @@ public class FrameGUI extends JFrame {
 
 	public FrameGUI(ClientMonitor cm) {
 		this.cm = cm;
-		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 15));
-		jui.setPreferredSize(new Dimension(1280, 100));
+		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 15));
+		jui.setPreferredSize(new Dimension(1280, 60));
 		jui.setLayout(new GridLayout(1,8));
 		jui.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setLayout(new BorderLayout(0, 2));
@@ -44,20 +44,20 @@ public class FrameGUI extends JFrame {
 		jui.setBackground(Color.gray);
 		vui.add(videoFrame1);
 		vui.add(videoFrame2);
-		vui.setPreferredSize(new Dimension(1280, 480));
+		vui.setPreferredSize(new Dimension(1280, 520));
 
 		jui.add(new JLabel("Sync mode"));
 
-		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 12));
+		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 12));
 		isMode = true;
 		for (int i = 0; i < syncBoxes.length; i++) {
 			createCheckBoxes(i, syncBoxes, syncCheck, bgSync);
 		}
 
-		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 15));
+		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 15));
 		jui.add(new JLabel("Movie mode"));
 
-		setUIFont(new javax.swing.plaf.FontUIResource("Comic Sans MS", Font.BOLD, 12));
+		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 12));
 		isMode = false;
 		for (int i = 0; i < movieBoxes.length; i++) {
 			createCheckBoxes(i, movieBoxes, movieCheck, bgMovie);
@@ -68,6 +68,7 @@ public class FrameGUI extends JFrame {
 		add(jui, BorderLayout.SOUTH);
 
 		setTitle("Camera Viewer");
+		setCursor(CROSSHAIR_CURSOR);
 		pack();
 		setSize(1280, 600);
 		setVisible(true);
@@ -96,13 +97,13 @@ public class FrameGUI extends JFrame {
 		jui.add(boxes[i]);
 	}
 	
-	public void sendImage(byte[] image, int frame){
+	public void sendImage(Picture p, int frame){
 		switch(frame){
 		case 1:
-			videoFrame1.refresh(image);
+			videoFrame1.refresh(p);
 			break;
 		case 2:
-			videoFrame2.refresh(image);
+			videoFrame2.refresh(p);
 			break;
 		}
 	}

@@ -1,5 +1,9 @@
 package client;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Picture {
 	private byte[] image;
 	private boolean motion;
@@ -21,5 +25,11 @@ public class Picture {
 	
 	public long getTime() {
 		return time;
+	}
+	
+	public String getDate(){
+	    Date date = new Date(time);
+	    Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+	    return format.format(date);
 	}
 }

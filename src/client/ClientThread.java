@@ -17,22 +17,17 @@ public class ClientThread extends Thread {
 		this.hostName = hostName;
 
 		System.out.println("Connecting to server");
-		try {
-			clientSocket = new Socket("localhost", port++);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 	public void run() {
 		while (port < 8082) {
 			try {
+				clientSocket = new Socket("localhost", port);
 				OutputStream out = clientSocket.getOutputStream();
 				InputStream in = clientSocket.getInputStream();
 				monitor.connect(in, out);
 				port++;
-				clientSocket = new Socket(hostName, port);
 			} catch (IOException e) {
 				System.err.println("No new camera");
 			}

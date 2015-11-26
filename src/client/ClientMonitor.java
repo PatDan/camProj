@@ -38,18 +38,21 @@ public class ClientMonitor {
 	}
 
 	synchronized void updateScreen(int panel) {
-		System.out.println("ClientMonitor: Updating screen");
+//		System.out.println("ClientMonitor: Updating screen");
 		Picture p = getPicture(panel);
-		gui.sendImage(p.getImage(), panel);
+		gui.sendImage(p, panel);
 	}
 
 	synchronized void changeMode(int mode) {
 		this.mode = mode;
+		System.out.println("The Mode is:" + mode);
 		notifyAll();
 	}
 
 	synchronized void changeSync(int sync) {
 		this.sync = sync;
+		System.out.println("The Sync is:" + sync);
+
 		notifyAll();
 	}
 
@@ -184,7 +187,7 @@ public class ClientMonitor {
 			break;
 		}
 
-		System.out.println("ClientMonitor Returning Image");
+//		System.out.println("ClientMonitor Returning Image");
 		notifyAll();
 		return ret;
 	}

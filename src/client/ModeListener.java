@@ -3,14 +3,19 @@ package client;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class ModeListener implements ItemListener{
+import javax.swing.JCheckBox;
+
+public class ModeListener implements ItemListener {
 	private ClientMonitor cm;
-	public ModeListener(ClientMonitor cm){
+
+	public ModeListener(ClientMonitor cm) {
 		this.cm = cm;
 	}
+
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		switch (e.getItem().toString()){
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			switch (((JCheckBox) e.getItem()).getText()) {
 			case "auto":
 				cm.changeMode(ClientMonitor.AUTO);
 				break;
@@ -20,8 +25,9 @@ public class ModeListener implements ItemListener{
 			case "movie":
 				cm.changeMode(ClientMonitor.MOVIE);
 				break;
+			}
 		}
-		
+
 	}
 
 }
