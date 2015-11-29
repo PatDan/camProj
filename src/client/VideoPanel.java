@@ -12,11 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class VideoPanel extends JPanel{
-	 ImageIcon icon;
-	 JLabel text;
+	 private ImageIcon icon;
+	 private JLabel text;
+	 private boolean blinked;
 
 	    public VideoPanel() {
 	      super();
+	      blinked = false;
 	      icon = new ImageIcon();
 	      JLabel label = new JLabel(icon);
 	      add(label, BorderLayout.CENTER);
@@ -34,5 +36,9 @@ public class VideoPanel extends JPanel{
 	      text.setFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 15));
 	      text.setText(p.getDate());
 	      setBackground(Color.lightGray);
+	    }
+	    public void borderBlink() {
+	    	setBorder(blinked ? BorderFactory.createLineBorder(Color.BLACK) : BorderFactory.createLineBorder(Color.RED));
+	    	blinked = !blinked;
 	    }
 }

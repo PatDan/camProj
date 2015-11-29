@@ -84,6 +84,7 @@ public class ClientMonitor {
 		if (image.motion()) {
 			mode = MOVIE;
 			gui.updateMode(mode);
+			gui.activeCamera(cam);
 		}
 		
 		notifyAll();
