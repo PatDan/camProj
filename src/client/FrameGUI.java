@@ -35,7 +35,7 @@ public class FrameGUI extends JFrame {
 	public FrameGUI(ClientMonitor cm) {
 		this.cm = cm;
 		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 15));
-		jui.setPreferredSize(new Dimension(1280, 60));
+		jui.setPreferredSize(new Dimension(1280, 50));
 		jui.setLayout(new GridLayout(1,8));
 		jui.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setLayout(new BorderLayout(0, 2));
@@ -68,7 +68,6 @@ public class FrameGUI extends JFrame {
 		add(jui, BorderLayout.SOUTH);
 
 		setTitle("Camera Viewer");
-		setCursor(CROSSHAIR_CURSOR);
 		pack();
 		setSize(1280, 600);
 		setVisible(true);
