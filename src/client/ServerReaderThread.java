@@ -20,7 +20,6 @@ public class ServerReaderThread extends Thread {
 
 	public void run() {
 		while(true) {
-//			clientMonitor.readImage(in);
 			byte[] l = new byte[4];
 			try {
 				l[0] = (byte) in.read();
@@ -28,13 +27,11 @@ public class ServerReaderThread extends Thread {
 				l[2] = (byte) in.read();
 				l[3] = (byte) in.read();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			int size = Util.byteToInt(l);
 
-			// System.out.println("size " + size);
 			byte[] msg = new byte[size];
 			int read = 0;
 			try {
@@ -45,7 +42,6 @@ public class ServerReaderThread extends Thread {
 					read += n;
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -57,11 +53,6 @@ public class ServerReaderThread extends Thread {
 				time[i - 1] = msg[i];
 			}
 
-			// System.out.println("ClientMonitor MotionDetection: " + motion);
-			// System.out.println("ClientMonitor timestamp: " +
-			// Util.byteToLong(time));
-
-			// Kom ih�g att h�mta ut tiden! kanske ska �verv�ga image-klass �nd�
 			byte[] image = new byte[msg.length - 9];
 			for (int i = 9; i < msg.length; i++) {
 				image[i - 9] = msg[i];
