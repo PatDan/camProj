@@ -8,14 +8,13 @@ import Util.Util;
 
 public class ClientMonitor {
 	public static int PORT_NUMBER = 8080;
-	public static final int AUTO = 0;
 	public static final int IDLE = 1;
 	public static final int MOVIE = 2;
 	public static final int SYNCHRONIZED = 1;
 	public static final int ASYNCHRONIZED = 2;
 
-	private int mode = AUTO;
-	private int sync = AUTO;
+	private int mode = IDLE;
+	private int sync = SYNCHRONIZED;
 	private Picture[] imageBuffer1;
 	private Picture[] imageBuffer2;
 	private FrameGUI gui;
@@ -84,6 +83,7 @@ public class ClientMonitor {
 		
 		if (image.motion()) {
 			mode = MOVIE;
+			gui.updateMode(mode);
 		}
 		
 		notifyAll();

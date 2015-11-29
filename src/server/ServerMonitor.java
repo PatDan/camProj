@@ -7,8 +7,8 @@ import Util.Util;
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
 
 public class ServerMonitor {
-	public static final int MOVIE_MODE = 1;
-	public static final int IDLE_MODE = 2;
+	public static final int IDLE_MODE = 1;
+	public static final int MOVIE_MODE = 2;
 	private int mode;
 	private long lastImage;
 	private AxisM3006V cam;
@@ -36,6 +36,11 @@ public class ServerMonitor {
 
 	synchronized int mode() {
 		return mode;
+	}
+	
+	synchronized void updateMode(int mode) {
+		this.mode = mode;
+		notifyAll();
 	}
 
 	synchronized byte[] image() {
@@ -90,38 +95,4 @@ public class ServerMonitor {
 		return image;
 	}
 
-	public static void main(String[] args) {
-
-		byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
-		AxisM3006V cam = new AxisM3006V();
-		cam.init();
-		cam.connect();
-		int length = cam.getJPEG(jpeg, 0);
-		int pos = jpeg.length - 1;
-		while (jpeg[pos] == 0 && pos >= 0) {
-			pos--;
-		}
-
-		byte[] image = new byte[pos + 1];
-		byte[] time = new byte[AxisM3006V.TIME_ARRAY_SIZE];
-		cam.getTime(time, 0);
-//		System.out.println(Arrays.toString(time));
-//		byte[] b = intToByteArray(128);
-//		System.out.println(Arrays.toString(b));
-//		int a = byteToIntArray(b);
-//		System.out.println(a);
-
-		// System.out.println(jpeg.length + " " + pos + " " + image.length);
-
-		for (int i = 0; i <= pos; i++) {
-			image[i] = jpeg[i];
-		}
-		
-//		System.out.println(length);
-//		System.out.println(image.length);
-
-		// System.out.println(image.length);
-
-		// System.out.println(Arrays.toString(image));
-	}
 }
