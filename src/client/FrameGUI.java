@@ -48,7 +48,7 @@ public class FrameGUI extends JFrame {
 		jui.setBackground(Color.gray);
 		vui.add(videoFrame1);
 		vui.add(videoFrame2);
-		vui.setPreferredSize(new Dimension(1280, 520));
+		vui.setPreferredSize(new Dimension(1280, 540));
 
 		jui.add(new JLabel("Sync mode"));
 
@@ -73,7 +73,7 @@ public class FrameGUI extends JFrame {
 
 		setTitle("Camera Viewer");
 		pack();
-		setSize(1280, 600);
+		setSize(1280, 620);
 		setVisible(true);
 		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -105,8 +105,8 @@ public class FrameGUI extends JFrame {
 		boxes[i] = new JCheckBox(names[i]);
 		boxes[i].setBorder(new EmptyBorder(0, 0, 0, 0));
 		boxes[i].setBackground(Color.gray);
-		boxes[i].addItemListener(isMode ? new SyncListener(cm) : new ModeListener(cm));
 		boxes[i].setSelected(i == 0 ? true : false);
+		boxes[i].addItemListener(isMode ? new SyncListener(cm) : new ModeListener(cm));
 		bg.add(boxes[i]);
 		jui.add(boxes[i]);
 	}
@@ -116,7 +116,6 @@ public class FrameGUI extends JFrame {
 	 * @param mode
 	 */
 	public void updateMode(int mode) {
-		System.out.println("Updating GUI mode" + mode);
 		movieCheck[mode - 1].setSelected(true);
 	}
 	/**
@@ -126,10 +125,10 @@ public class FrameGUI extends JFrame {
 	public void activeCamera(int panel) {
 		switch (panel) {
 		case (1):
-			videoFrame1.borderBlink();
+			videoFrame1.setTriggered();
 			break;
 		case (2):
-			videoFrame2.borderBlink();
+			videoFrame2.setTriggered();
 			break;
 		}
 	}
@@ -149,7 +148,7 @@ public class FrameGUI extends JFrame {
 			break;
 		}
 	}
-
-	
-
+	public void changeSyncMode(int mode) {
+		syncCheck[mode - 1].setSelected(true);	
+	}
 }

@@ -13,8 +13,8 @@ public class ClientMonitor {
 	public static final int SYNCHRONIZED = 1;
 	public static final int ASYNCHRONIZED = 2;
 
-	private int mode = IDLE;
-	private int sync = SYNCHRONIZED;
+	private int movieMode = IDLE;
+	private int syncMode = SYNCHRONIZED;
 	private Picture[] imageBuffer1;
 	private Picture[] imageBuffer2;
 	private FrameGUI gui;
@@ -26,6 +26,7 @@ public class ClientMonitor {
 		imageBuffer1 = new Picture[0];
 		imageBuffer2 = new Picture[0];
 		new ClientThread(this, PORT_NUMBER, "localhost").start();
+		new SyncThread(this).start();
 		nextCam = 1;
 	}
 
@@ -43,15 +44,14 @@ public class ClientMonitor {
 	}
 
 	synchronized void changeMode(int mode) {
-		this.mode = mode;
+		this.movieMode = mode;
 		System.out.println("The Mode is:" + mode);
 		notifyAll();
 	}
 
 	synchronized void changeSync(int sync) {
-		this.sync = sync;
-		System.out.println("The Sync is:" + sync);
-
+		this.syncMode = sync;
+		gui.changeSyncMode(syncMode);
 		notifyAll();
 	}
 
@@ -82,9 +82,9 @@ public class ClientMonitor {
 			break;
 		}
 		
-		if (image.motion()) {
-			mode = MOVIE;
-			gui.updateMode(mode);
+		if (image.motion() && movieMode != MOVIE) {
+			movieMode = MOVIE;
+			gui.updateMode(movieMode);
 			gui.activeCamera(cam);
 		}
 		
@@ -92,19 +92,32 @@ public class ClientMonitor {
 	}
 
 	private Picture getPicture(int cam) {
+		int threshold = 0;
+		switch(syncMode) {
+		case SYNCHRONIZED:
+			threshold = 200;
+			break;
+		case ASYNCHRONIZED:
+			threshold = 0;
+			break;
+		}
+		
 		Picture[] imageBuffer = null;
 		try {
+			long t0;
 			switch(cam) {
 			case 1:
 				while (imageBuffer1.length == 0) {
 					wait();
 				}
+				while((t0 = System.currentTimeMillis()) < imageBuffer1[0].getTime() + threshold) wait(imageBuffer1[0].getTime() + threshold - t0);
 				imageBuffer = imageBuffer1;
 				break;
 			case 2:
 				while (imageBuffer2.length == 0) {
 					wait();
 				}
+				while((t0 = System.currentTimeMillis()) < imageBuffer2[0].getTime() + threshold) wait(imageBuffer2[0].getTime() + threshold - t0);
 				imageBuffer = imageBuffer2;
 				break;
 			}
@@ -138,13 +151,37 @@ public class ClientMonitor {
 	
 	synchronized int updateMode(int lastMode) {
 		try {
-			while(mode == lastMode) {
+			while(movieMode == lastMode) {
 				wait();
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		return mode;
+		return movieMode;
+	}
+
+	synchronized int getSyncPicture(int cam, long t0) {
+		Picture[] imageBuffer = null;
+		switch(cam) {
+		case 1:
+			imageBuffer = imageBuffer1;
+			break;
+		case 2:
+			imageBuffer = imageBuffer2;
+			break;
+		}
+		
+		int i = 0;
+		
+		while(i < imageBuffer.length && (t0 - imageBuffer[i].getTime() < 200)) {
+			i++;
+		}
+		
+		return i;
+	}
+
+	synchronized int getSyncMode() {
+		return syncMode;
 	}
 }

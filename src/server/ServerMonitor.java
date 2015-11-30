@@ -10,13 +10,13 @@ import se.lth.cs.eda040.fakecamera.AxisM3006V; //This is for fake cameraM30
 public class ServerMonitor {
 	public static final int IDLE_MODE = 1;
 	public static final int MOVIE_MODE = 2;
-	private int mode;
+	private int movieMode;
 	private long lastImage;
 	private boolean connected;
 	private static int camNbr = 0;
 
 	public ServerMonitor() {
-		mode = IDLE_MODE;
+		movieMode = IDLE_MODE;
 		lastImage = System.currentTimeMillis() - 5000;
 		connected = false;
 		new ServerThread(this, 8080 + camNbr).start();
@@ -30,11 +30,11 @@ public class ServerMonitor {
 	}
 
 	synchronized int mode() {
-		return mode;
+		return movieMode;
 	}
 
 	synchronized void updateMode(int mode) {
-		this.mode = mode;
+		this.movieMode = mode;
 		notifyAll();
 	}
 
@@ -43,7 +43,7 @@ public class ServerMonitor {
 		try {
 			long t1;
 
-			while (mode == IDLE_MODE && lastImage + 5000 > (t1 = System.currentTimeMillis())
+			while (movieMode == IDLE_MODE && lastImage + 5000 > (t1 = System.currentTimeMillis())
 					&& !(motionDetected = cam.motionDetected()))
 				wait(lastImage + 5000 - t1);
 		} catch (InterruptedException e) {

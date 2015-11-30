@@ -17,6 +17,7 @@ public class SyncListener implements ItemListener {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			switch (((JCheckBox) e.getItem()).getText()) {
 			case "synchronized":
+				System.out.println("Nico luktar skit");
 				cm.changeSync(ClientMonitor.SYNCHRONIZED);
 				break;
 			case "asynchronized":
