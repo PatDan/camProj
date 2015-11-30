@@ -150,17 +150,6 @@ public class FrameGUI extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		
-		Runnable r = new Runnable() {
-			public void run() {
-				ServerMonitor sm = new ServerMonitor();
-				ServerMonitor sm2 = new ServerMonitor();
-				ClientMonitor am = new ClientMonitor();
-
-			}
-		};
-		SwingUtilities.invokeLater(r);
-	}
+	
 
 }
