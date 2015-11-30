@@ -40,6 +40,7 @@ public class ClientMonitor {
 	synchronized void updateScreen(int panel) {
 		Picture p = getPicture(panel);
 		gui.sendImage(p, panel);
+		
 	}
 
 	synchronized void changeMode(int mode) {
