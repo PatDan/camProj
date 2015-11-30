@@ -16,9 +16,6 @@ public class ModeListener implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			switch (((JCheckBox) e.getItem()).getText()) {
-			case "auto":
-				cm.changeMode(ClientMonitor.AUTO);
-				break;
 			case "idle":
 				cm.changeMode(ClientMonitor.IDLE);
 				break;

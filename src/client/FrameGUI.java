@@ -18,10 +18,10 @@ import javax.swing.border.EmptyBorder;
 import server.ServerMonitor;
 
 public class FrameGUI extends JFrame {
-	private String[] syncBoxes = { "auto", "synchronized", "asynchronized" };
-	private String[] movieBoxes = { "auto", "movie", "idle" };
+	private String[] syncBoxes = { "synchronized", "asynchronized" };
+	private String[] movieBoxes = { "idle", "movie" };
 
-	JPanel jui = new JPanel(new GridLayout(1,2));
+	JPanel jui = new JPanel(new GridLayout(1, 2));
 	JPanel vui = new JPanel(new GridLayout(1, 2));
 	private JCheckBox syncCheck[];
 	private JCheckBox movieCheck[];
@@ -36,7 +36,7 @@ public class FrameGUI extends JFrame {
 		this.cm = cm;
 		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 15));
 		jui.setPreferredSize(new Dimension(1280, 50));
-		jui.setLayout(new GridLayout(1,8));
+		jui.setLayout(new GridLayout(1, 6));
 		jui.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setLayout(new BorderLayout(0, 2));
 		syncCheck = new JCheckBox[syncBoxes.length];
@@ -76,7 +76,7 @@ public class FrameGUI extends JFrame {
 
 	}
 
-	public static void setUIFont(javax.swing.plaf.FontUIResource f) {
+	private static void setUIFont(javax.swing.plaf.FontUIResource f) {
 		java.util.Enumeration keys = UIManager.getDefaults().keys();
 		while (keys.hasMoreElements()) {
 			Object key = keys.nextElement();
@@ -86,7 +86,7 @@ public class FrameGUI extends JFrame {
 		}
 	}
 
-	public void createCheckBoxes(int i, String[] names, JCheckBox boxes[], ButtonGroup bg) {
+	private void createCheckBoxes(int i, String[] names, JCheckBox boxes[], ButtonGroup bg) {
 		boxes[i] = new JCheckBox(names[i]);
 		boxes[i].setBorder(new EmptyBorder(0, 0, 0, 0));
 		boxes[i].setBackground(Color.gray);
@@ -95,9 +95,25 @@ public class FrameGUI extends JFrame {
 		bg.add(boxes[i]);
 		jui.add(boxes[i]);
 	}
-	
-	public void sendImage(Picture p, int frame){
-		switch(frame){
+
+	public void updateMode(int mode) {
+		System.out.println("Updating GUI mode" + mode);
+		movieCheck[mode - 1].setSelected(true);
+	}
+
+	public void activeCamera(int panel) {
+		switch (panel) {
+		case (1):
+			videoFrame1.borderBlink();
+			break;
+		case (2):
+			videoFrame2.borderBlink();
+			break;
+		}
+	}
+
+	public void sendImage(Picture p, int frame) {
+		switch (frame) {
 		case 1:
 			videoFrame1.refresh(p);
 			break;
@@ -114,8 +130,7 @@ public class FrameGUI extends JFrame {
 				ServerMonitor sm = new ServerMonitor();
 				ServerMonitor sm2 = new ServerMonitor();
 				ClientMonitor am = new ClientMonitor();
-			
-			
+
 			}
 		};
 		SwingUtilities.invokeLater(r);
