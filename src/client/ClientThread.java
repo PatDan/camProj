@@ -11,6 +11,12 @@ public class ClientThread extends Thread {
 	private String hostName;
 	private Socket clientSocket;
 
+	/**
+	 * Handles connecting to camera servers
+	 * @param monitor
+	 * @param port
+	 * @param hostName
+	 */
 	public ClientThread(ClientMonitor monitor, int port, String hostName) {
 		this.port = port;
 		this.monitor = monitor;
@@ -29,7 +35,7 @@ public class ClientThread extends Thread {
 				monitor.connect(in, out);
 				port++;
 			} catch (IOException e) {
-//				System.err.println("No new camera");
+				System.err.println("No new camera");
 			}
 		}
 

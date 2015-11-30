@@ -20,11 +20,14 @@ import server.ServerMonitor;
 public class FrameGUI extends JFrame {
 	private String[] syncBoxes = { "synchronized", "asynchronized" };
 	private String[] movieBoxes = { "idle", "movie" };
+	
 
 	JPanel jui = new JPanel(new GridLayout(1, 2));
 	JPanel vui = new JPanel(new GridLayout(1, 2));
 	private JCheckBox syncCheck[];
 	private JCheckBox movieCheck[];
+	private JCheckBox autoCheck;
+	
 	private ButtonGroup bgSync = new ButtonGroup();
 	private ButtonGroup bgMovie = new ButtonGroup();
 	private VideoPanel videoFrame1 = new VideoPanel();
@@ -40,7 +43,7 @@ public class FrameGUI extends JFrame {
 		this.cm = cm;
 		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 15));
 		jui.setPreferredSize(new Dimension(1280, 50));
-		jui.setLayout(new GridLayout(1, 6));
+		jui.setLayout(new GridLayout(1, 7));
 		jui.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setLayout(new BorderLayout(0, 2));
 		syncCheck = new JCheckBox[syncBoxes.length];
@@ -53,6 +56,15 @@ public class FrameGUI extends JFrame {
 		jui.add(new JLabel("Sync mode"));
 
 		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 12));
+		
+		autoCheck = new JCheckBox("auto");
+		autoCheck.setBorder(new EmptyBorder(0, 0, 0, 0));
+		autoCheck.setBackground(Color.gray);
+		autoCheck.setSelected(true);
+		autoCheck.addItemListener(new AutoListener(cm));
+		jui.add(autoCheck);
+		
+		
 		isMode = true;
 		for (int i = 0; i < syncBoxes.length; i++) {
 			createCheckBoxes(i, syncBoxes, syncCheck, bgSync);

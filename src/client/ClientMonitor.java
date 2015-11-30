@@ -19,7 +19,11 @@ public class ClientMonitor {
 	private Picture[] imageBuffer2;
 	private FrameGUI gui;
 	private int nextCam;
+	private boolean autoSync;
 
+	/**
+	 * Monitor for the client. Handles buffers for the cameras
+	 */
 	public ClientMonitor() {
 //		System.out.println("Starting client thread");
 		gui = new FrameGUI(this);
@@ -30,6 +34,11 @@ public class ClientMonitor {
 		nextCam = 1;
 	}
 
+	/**
+	 * Called when a connection to a camera server is established
+	 * @param in - inputstream from camera server
+	 * @param out - outputstream to camera server
+	 */
 	synchronized void connect(InputStream in, OutputStream out) {
 		new ServerReaderThread(this, in, nextCam).start();
 		new ClientWriterThread(this, out, nextCam).start();
@@ -37,24 +46,51 @@ public class ClientMonitor {
 		nextCam++;
 	}
 
+	/**
+	 * Called to update a video panel
+	 * @param panel - the number of the panel to be updated
+	 */
 	synchronized void updateScreen(int panel) {
 		Picture p = getPicture(panel);
 		gui.sendImage(p, panel);
 		
 	}
 
-	synchronized void changeMode(int mode) {
-		this.movieMode = mode;
-		System.out.println("The Mode is:" + mode);
+	/**
+	 * Change the video mode of the client
+	 * @param videoMode - IDLE or MOVIE
+	 */
+	synchronized void changeVideoMode(int videoMode) {
+		this.movieMode = videoMode;
+		System.out.println("The Mode is:" + videoMode);
 		notifyAll();
 	}
 
-	synchronized void changeSync(int sync) {
-		this.syncMode = sync;
+	/**
+	 * Force the synchronization mode of the client
+	 * @param syncMode - SYNCHRONIZED or ASYNCHRONIZED
+	 */
+	synchronized void forceSync(int syncMode) {
+		this.syncMode = syncMode;
 		gui.changeSyncMode(syncMode);
 		notifyAll();
 	}
+	
+	/**
+	 * Change the synchronization mode of the client if mode is auto
+	 * @param sync - SYNCHRONIZED or ASYNCHRONIZED
+	 */
+	synchronized void changeSync(int sync){
+		if(autoSync){
+			forceSync(sync);
+		}
+	}
 
+	/**
+	 * Adds an image to the buffer of the camera's buffer
+	 * @param image - The image to be added
+	 * @param cam - The number of the camera adding an image
+	 */
 	synchronized void putImage(Picture image, int cam) {
 		Picture[] imageBuffer = null;
 		switch(cam) {
@@ -91,6 +127,11 @@ public class ClientMonitor {
 		notifyAll();
 	}
 
+	/**
+	 * Gets the first image from the camera's buffer
+	 * @param cam - number of the camera
+	 * @return the image
+	 */
 	private Picture getPicture(int cam) {
 		int threshold = 0;
 		switch(syncMode) {
@@ -149,6 +190,11 @@ public class ClientMonitor {
 		return ret;
 	}
 	
+	/**
+	 * Checks if the movie mode is changed
+	 * @param lastMode - the last mode returned
+	 * @return the mode
+	 */
 	synchronized int updateMode(int lastMode) {
 		try {
 			while(movieMode == lastMode) {
@@ -161,6 +207,12 @@ public class ClientMonitor {
 		return movieMode;
 	}
 
+	/**
+	 * Checks the number of images in the camera's buffer within the thershold
+	 * @param cam - The number of the camera
+	 * @param t0 - current time
+	 * @return
+	 */
 	synchronized int getSyncPicture(int cam, long t0) {
 		Picture[] imageBuffer = null;
 		switch(cam) {
@@ -181,7 +233,19 @@ public class ClientMonitor {
 		return i;
 	}
 
+	/**
+	 * @return the synchronization mode
+	 */
 	synchronized int getSyncMode() {
 		return syncMode;
+	}
+
+	/**
+	 * Controlls if synchronization mode is auto
+	 * @param autoSync - true if auto else false
+	 */
+	synchronized void setAuto(boolean autoSync) {
+		this.autoSync = autoSync;
+		
 	}
 }

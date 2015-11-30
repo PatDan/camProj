@@ -18,10 +18,10 @@ public class SyncListener implements ItemListener {
 			switch (((JCheckBox) e.getItem()).getText()) {
 			case "synchronized":
 				System.out.println("Nico luktar skit");
-				cm.changeSync(ClientMonitor.SYNCHRONIZED);
+				cm.forceSync(ClientMonitor.SYNCHRONIZED);
 				break;
 			case "asynchronized":
-				cm.changeSync(ClientMonitor.ASYNCHRONIZED);
+				cm.forceSync(ClientMonitor.ASYNCHRONIZED);
 				break;
 			}
 		}

@@ -17,10 +17,10 @@ public class ModeListener implements ItemListener {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			switch (((JCheckBox) e.getItem()).getText()) {
 			case "idle":
-				cm.changeMode(ClientMonitor.IDLE);
+				cm.changeVideoMode(ClientMonitor.IDLE);
 				break;
 			case "movie":
-				cm.changeMode(ClientMonitor.MOVIE);
+				cm.changeVideoMode(ClientMonitor.MOVIE);
 				break;
 			}
 		}
