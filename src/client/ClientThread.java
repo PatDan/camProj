@@ -29,7 +29,7 @@ public class ClientThread extends Thread {
 				monitor.connect(in, out);
 				port++;
 			} catch (IOException e) {
-				System.err.println("No new camera");
+//				System.err.println("No new camera");
 			}
 		}
 

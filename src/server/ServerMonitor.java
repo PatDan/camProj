@@ -5,14 +5,13 @@ import java.io.OutputStream;
 
 import Util.Util;
 //import se.lth.cs.eda040.proxycamera.AxisM3006V; //This is for proxy camera
-import se.lth.cs.eda040.fakecamera.AxisM3006V; //This is for fake camera
+import se.lth.cs.eda040.fakecamera.AxisM3006V; //This is for fake cameraM30
 
 public class ServerMonitor {
 	public static final int IDLE_MODE = 1;
 	public static final int MOVIE_MODE = 2;
 	private int mode;
 	private long lastImage;
-	private AxisM3006V cam;
 	private boolean connected;
 	private static int camNbr = 0;
 
@@ -20,20 +19,14 @@ public class ServerMonitor {
 		mode = IDLE_MODE;
 		lastImage = System.currentTimeMillis() - 5000;
 		connected = false;
-		cam = new AxisM3006V();
-		cam.init();
-//		cam.setProxy("argus-" + (camNbr + 1) + ".student.lth.se", 8080 + camNbr); //This is for proxy camera
-		cam.connect();
-		System.out.println("Starting server thread");
 		new ServerThread(this, 8080 + camNbr).start();
-		System.out.println("Starting server: " + camNbr);
 		camNbr++;
 	}
 
 	synchronized void connect(InputStream in, OutputStream out) {
 		connected = true;
 		new ClientReaderThread(this, in).start();
-		new ServerWriterThread(this, out).start();
+		new ServerWriterThread(this, out, camNbr).start();
 	}
 
 	synchronized int mode() {
@@ -45,7 +38,7 @@ public class ServerMonitor {
 		notifyAll();
 	}
 
-	synchronized byte[] image() {
+	synchronized byte[] image(AxisM3006V cam) {
 		boolean motionDetected = false;
 		try {
 			long t1;
