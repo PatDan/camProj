@@ -49,7 +49,7 @@ public class ServerMonitor {
 			try {
 				long t1;
 
-				while (lastImage + 5000 > (t1 = System.currentTimeMillis()) && !(motionDetected = cam.motionDetected()))
+				while (mode == IDLE_MODE && lastImage + 5000 > (t1 = System.currentTimeMillis()) && !(motionDetected = cam.motionDetected()))
 					wait(lastImage + 5000 - t1);
 			} catch (InterruptedException e) {
 				System.out.println("Server interrupted while waiting for image");
