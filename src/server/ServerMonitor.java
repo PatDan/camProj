@@ -4,7 +4,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import Util.Util;
-import se.lth.cs.eda040.fakecamera.AxisM3006V;
+//import se.lth.cs.eda040.proxycamera.AxisM3006V; //This is for proxy camera
+import se.lth.cs.eda040.fakecamera.AxisM3006V; //This is for fake camera
 
 public class ServerMonitor {
 	public static final int IDLE_MODE = 1;
@@ -21,9 +22,10 @@ public class ServerMonitor {
 		connected = false;
 		cam = new AxisM3006V();
 		cam.init();
+//		cam.setProxy("argus-" + (camNbr + 1) + ".student.lth.se", 8080 + camNbr); //This is for proxy camera
 		cam.connect();
 		System.out.println("Starting server thread");
-		new ServerThread(this, 8080+camNbr).start();
+		new ServerThread(this, 8080 + camNbr).start();
 		System.out.println("Starting server: " + camNbr);
 		camNbr++;
 	}
@@ -37,7 +39,7 @@ public class ServerMonitor {
 	synchronized int mode() {
 		return mode;
 	}
-	
+
 	synchronized void updateMode(int mode) {
 		this.mode = mode;
 		notifyAll();
@@ -45,15 +47,14 @@ public class ServerMonitor {
 
 	synchronized byte[] image() {
 		boolean motionDetected = false;
-		if (mode == IDLE_MODE) {
-			try {
-				long t1;
+		try {
+			long t1;
 
-				while (mode == IDLE_MODE && lastImage + 5000 > (t1 = System.currentTimeMillis()) && !(motionDetected = cam.motionDetected()))
-					wait(lastImage + 5000 - t1);
-			} catch (InterruptedException e) {
-				System.out.println("Server interrupted while waiting for image");
-			}
+			while (mode == IDLE_MODE && lastImage + 5000 > (t1 = System.currentTimeMillis())
+					&& !(motionDetected = cam.motionDetected()))
+				wait(lastImage + 5000 - t1);
+		} catch (InterruptedException e) {
+			System.out.println("Server interrupted while waiting for image");
 		}
 
 		byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
@@ -62,27 +63,24 @@ public class ServerMonitor {
 		cam.getTime(time, 0);
 		byte motion = (byte) (motionDetected ? 1 : 0);
 		jpeg = trim(jpeg, pos);
-//		System.out.println("ServerMonitor: jpeg.length: " + jpeg.length);
-		int length = jpeg.length + time.length+1;
+		int length = jpeg.length + time.length + 1;
 		byte[] blength = Util.intToByteArray(length);
-		byte[] msg = new byte[blength.length+length];
-		for(int i = 0; i < blength.length; i++) {
+		byte[] msg = new byte[blength.length + length];
+		for (int i = 0; i < blength.length; i++) {
 			msg[i] = blength[i];
 		}
 		int offset = blength.length;
 		msg[offset] = motion;
 		offset++;
-		for(int i = 0; i < time.length; i++) {
-			msg[i+offset] = time[i];
+		for (int i = 0; i < time.length; i++) {
+			msg[i + offset] = time[i];
 		}
 		offset += time.length;
-		for(int i = 0; i < jpeg.length; i++) {
-			msg[i+offset] = jpeg[i];
+		for (int i = 0; i < jpeg.length; i++) {
+			msg[i + offset] = jpeg[i];
 		}
-		
+
 		lastImage = System.currentTimeMillis();
-		
-//		System.out.println("ServerMonitor: msg size: " + msg.length);
 
 		return msg;
 	}
