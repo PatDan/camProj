@@ -14,19 +14,20 @@ public class ServerMonitor {
 	private long lastImage;
 	private boolean connected;
 	private static int camNbr = 0;
+	private int thisCamNbr;
 
 	public ServerMonitor() {
 		movieMode = IDLE_MODE;
 		lastImage = System.currentTimeMillis() - 5000;
 		connected = false;
 		new ServerThread(this, 8080 + camNbr).start();
-		camNbr++;
+		thisCamNbr = camNbr++;
 	}
 
 	synchronized void connect(InputStream in, OutputStream out) {
 		connected = true;
 		new ClientReaderThread(this, in).start();
-		new ServerWriterThread(this, out, camNbr).start();
+		new ServerWriterThread(this, out, thisCamNbr).start();
 	}
 
 	synchronized int mode() {
@@ -39,6 +40,7 @@ public class ServerMonitor {
 	}
 
 	synchronized byte[] image(AxisM3006V cam) {
+		System.out.println("Getting image");
 		boolean motionDetected = false;
 		try {
 			long t1;

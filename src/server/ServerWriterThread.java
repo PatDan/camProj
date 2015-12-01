@@ -22,7 +22,10 @@ public class ServerWriterThread extends Thread{
 		AxisM3006V cam = new AxisM3006V();
 		cam = new AxisM3006V();
 		cam.init();
-//		cam.setProxy("argus-" + (camNbr + 1) + ".student.lth.se", 8080 + camNbr); //This is for proxy camera
+		String hostname = "argus-" + (camNbr + 1) + ".student.lth.se";
+		System.out.println(hostname);
+		System.out.println(8080 + camNbr);
+//		cam.setProxy(hostname, 8080 + camNbr); //This is for proxy camera
 		cam.connect();
 		while(!Thread.interrupted()) {
 			try {
