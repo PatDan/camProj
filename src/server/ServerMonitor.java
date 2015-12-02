@@ -40,7 +40,6 @@ public class ServerMonitor {
 	}
 
 	synchronized byte[] image(AxisM3006V cam) {
-		System.out.println("Getting image");
 		boolean motionDetected = false;
 		try {
 			long t1;
