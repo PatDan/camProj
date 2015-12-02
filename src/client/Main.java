@@ -8,12 +8,41 @@ import javax.swing.SwingUtilities;
 import server.ServerMonitor;
 
 public class Main {
-	String input;
+	
 public static void main(String[] args) {
 		
 		Runnable r = new Runnable() {
+			/**
+			 * This is the run method for the main method, it shows a dialog box for the initial inputs
+			 * the variable input is a vector which includes 4 values corresponding to the First Camera Number,
+			 * the first port number, the second camera number, and lastly the second port number.
+			 * Thus input[0] gives you the first camera number and so forth.
+			 */
 			public void run() {
+				boolean incorrectEntry = true;
+				int[] input = null;
 				JFrame inputPanel = new JFrame();
+				while(incorrectEntry){
+				try{
+				input = createInputDialog(inputPanel);
+		
+				}catch(NumberFormatException nfe){
+					JOptionPane.showMessageDialog(inputPanel, "Please Enter Numbers only");
+					incorrectEntry = true;
+				}
+				if(!(input == null)){
+					incorrectEntry = false;
+				}
+				}
+				
+				ServerMonitor sm = new ServerMonitor();
+				ServerMonitor sm2 = new ServerMonitor();
+				ClientMonitor am = new ClientMonitor();
+
+			}
+
+			private int[] createInputDialog(JFrame inputPanel) {
+				
 				JTextField field1 = new JTextField();
 				JTextField field2 = new JTextField();
 				JTextField field3 = new JTextField();
@@ -31,14 +60,14 @@ public static void main(String[] args) {
 				    int FirstPortNbr = Integer.parseInt(field2.getText());
 				    int SecondCameraNbr = Integer.parseInt(field3.getText());
 				    int SecondPortNbr = Integer.parseInt(field4.getText());
+				    int[] returnVector = {FirstCameraNbr, FirstPortNbr, SecondCameraNbr, SecondPortNbr};
+				    return returnVector;
+					
+				    
+				}else if(option == JOptionPane.CANCEL_OPTION){
+					System.exit(0);
 				}
-				
-				
-				
-				ServerMonitor sm = new ServerMonitor();
-				ServerMonitor sm2 = new ServerMonitor();
-				ClientMonitor am = new ClientMonitor();
-
+				return null;
 			}
 		};
 		SwingUtilities.invokeLater(r);
