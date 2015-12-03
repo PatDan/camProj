@@ -66,7 +66,12 @@ public class ReadImageThread extends Thread {
 		cam.close();
 		cam.destroy();
 	}
-
+	/**
+	 * A method to extract the image from the package.
+	 * @param jpeg
+	 * @param pos
+	 * @return image 
+	 */
 	private byte[] trim(byte[] jpeg, int pos) {
 		byte[] image = new byte[pos + 1];
 		for (int i = 0; i <= pos; i++) {

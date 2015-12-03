@@ -28,7 +28,7 @@ public class ClientThread extends Thread {
 	}
 
 	/**
-	 * Tries to connect to two cameras at port 8080 and 8081
+	 * Attempts connection with two cameras at port 8080 and 8081
 	 */
 	public void run() {
 		while (port < 8082) {

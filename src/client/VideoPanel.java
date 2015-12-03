@@ -10,14 +10,16 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
+/**
+ * A JPanel that has support to update images
+ */
 public class VideoPanel extends JPanel {
 	private ImageIcon icon;
 	private JLabel text;
 	private JLabel text1;
 	private long triggerdTime;
 	private boolean triggered;
-
+	
 	public VideoPanel() {
 		super();
 		icon = new ImageIcon();
@@ -35,7 +37,11 @@ public class VideoPanel extends JPanel {
 //		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		triggered = false;
 	}
-
+	/**
+	 * Method to update the the icon with the picture input.
+	 * @param p
+	 * 			-Picture from ScreenThread.
+	 */
 	public void refresh(Picture p) {
 		Image image = getToolkit().createImage(p.getImage());
 		getToolkit().prepareImage(image, -1, -1, null);
