@@ -1,9 +1,7 @@
 package client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import Util.Util;
 
@@ -12,14 +10,28 @@ public class ServerReaderThread extends Thread {
 	private InputStream in;
 	private int cam;
 
+	/**
+	 * Handles reading images from the server
+	 * 
+	 * @param clientMonitor
+	 *            - the client monitor containing the image buffers to add
+	 *            images to
+	 * @param in
+	 *            - the inputstream from the server
+	 * @param cam
+	 *            - the number of the image buffer to put the image
+	 */
 	public ServerReaderThread(ClientMonitor clientMonitor, InputStream in, int cam) {
 		this.clientMonitor = clientMonitor;
 		this.in = in;
 		this.cam = cam;
 	}
 
+	/**
+	 * Reads from inputstream and adds the image to the image buffer
+	 */
 	public void run() {
-		while(true) {
+		while (true) {
 			byte[] l = new byte[4];
 			try {
 				l[0] = (byte) in.read();

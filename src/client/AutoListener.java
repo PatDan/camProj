@@ -3,11 +3,9 @@ package client;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.JCheckBox;
-
 public class AutoListener implements ItemListener {
 	private ClientMonitor cm;
-
+	
 	public AutoListener(ClientMonitor cm) {
 		this.cm = cm;
 	}

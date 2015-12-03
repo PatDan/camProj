@@ -13,6 +13,7 @@ public class ClientThread extends Thread {
 
 	/**
 	 * Handles connecting to camera servers
+	 * 
 	 * @param monitor
 	 * @param port
 	 * @param hostName
@@ -23,9 +24,12 @@ public class ClientThread extends Thread {
 		this.hostName = hostName;
 
 		System.out.println("Connecting to server");
-		
+
 	}
 
+	/**
+	 * Tries to connect to two cameras at port 8080 and 8081
+	 */
 	public void run() {
 		while (port < 8082) {
 			try {

@@ -1,10 +1,7 @@
 package client;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import Util.Util;
 
 public class ClientMonitor {
 	public static int PORT_NUMBER = 8080;
@@ -23,7 +20,8 @@ public class ClientMonitor {
 	private boolean autoSync;
 
 	/**
-	 * Monitor for the client. Handles buffers for the cameras
+	 * Monitor for the client. Handles buffers for the cameras, mode for
+	 * synchronization and mode for sending images.
 	 */
 	public ClientMonitor() {
 		// System.out.println("Starting client thread");
@@ -48,7 +46,7 @@ public class ClientMonitor {
 		int nextCam = this.nextCam;
 		this.nextCam++;
 		new ServerReaderThread(this, in, nextCam).start();
-		new ClientWriterThread(this, out, nextCam).start();
+		new ClientWriterThread(this, out).start();
 		new ScreenThread(this, nextCam).start();
 	}
 
@@ -125,8 +123,8 @@ public class ClientMonitor {
 			imageBuffer = imageBuffer2;
 			break;
 		}
-		
-		if(imageBuffer == null) {
+
+		if (imageBuffer == null) {
 			System.err.println("Oh no...." + cam);
 		}
 		Picture[] temp = new Picture[imageBuffer.length + 1];

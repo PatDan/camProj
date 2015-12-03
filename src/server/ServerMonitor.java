@@ -13,6 +13,9 @@ public class ServerMonitor {
 	private boolean motionDetected;
 	private volatile byte[] imageBuffer;
 
+	/**
+	 * The server monitor handling movie mode and sending images
+	 */
 	public ServerMonitor() {
 		movieMode = IDLE_MODE;
 		lastSentImage = System.currentTimeMillis() - 5000;
@@ -22,22 +25,50 @@ public class ServerMonitor {
 		imageBuffer = null;
 	}
 
+	/**
+	 * Called when a client connects to the server. Starts threads handling
+	 * communication with client.
+	 * 
+	 * @param in
+	 *            - the inputstream from the client
+	 * @param out
+	 *            - the outputstream to the client
+	 */
 	synchronized void connect(InputStream in, OutputStream out) {
 		new ClientReaderThread(this, in).start();
 		new ReadImageThread(this, thisCamNbr).start();
-		new ServerWriterThread(this, out, thisCamNbr).start();
+		new ServerWriterThread(this, out).start();
 	}
 
+	/**
+	 * Returns the movie mode of the monitor
+	 * 
+	 * @return
+	 */
 	synchronized int mode() {
 		return movieMode;
 	}
 
+	/**
+	 * Changes the movie mode of the monitor
+	 * 
+	 * @param mode
+	 *            - the mode to change to
+	 */
 	synchronized void updateMode(int mode) {
 		this.movieMode = mode;
 		notifyAll();
 	}
 
-	synchronized void readImage(byte[] imageBuffer, boolean motionDetected) {
+	/**
+	 * Adds an image to the image buffer and detects motion
+	 * 
+	 * @param image
+	 *            - the image fetched from the camera
+	 * @param motionDetected
+	 *            - true if motion detected, else false
+	 */
+	synchronized void readImage(byte[] image, boolean motionDetected) {
 		try {
 			while (movieMode == MOVIE_MODE && this.imageBuffer != null)
 				wait();
@@ -45,13 +76,19 @@ public class ServerMonitor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.imageBuffer = imageBuffer;
+		this.imageBuffer = image;
 		if (motionDetected) {
 			movieMode = MOVIE_MODE;
 		}
 		notifyAll();
 	}
 
+	/**
+	 * Returns the image in the image buffer. If in idle mode, returns image every
+	 * five second
+	 * 
+	 * @return - the image from the image buffer
+	 */
 	synchronized byte[] image() {
 		System.out.println("Trying to send image...");
 		try {

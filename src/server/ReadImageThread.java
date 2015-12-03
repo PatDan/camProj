@@ -4,24 +4,38 @@ import Util.Util;
 import se.lth.cs.eda040.fakecamera.AxisM3006V;
 //import se.lth.cs.eda040.proxycamera.AxisM3006V;
 
-public class ReadImageThread extends Thread{
+public class ReadImageThread extends Thread {
 	private ServerMonitor sm;
 	private int camNbr;
-	
-	public ReadImageThread (ServerMonitor sm, int camNbr) {
+
+	/**
+	 * Reads images from the camera
+	 * 
+	 * @param sm
+	 *            - the server monitor to add the images
+	 * @param camNbr
+	 *            - the number of the camera
+	 */
+	public ReadImageThread(ServerMonitor sm, int camNbr) {
 		this.sm = sm;
 		this.camNbr = camNbr;
 	}
+
+	/**
+	 * Connects to a camera and fetches images until interruption. Detects
+	 * motion.
+	 */
 	public void run() {
 		AxisM3006V cam = new AxisM3006V();
 		cam = new AxisM3006V();
 		cam.init();
-		String hostname = "argus-" + ((camNbr + 1)*2) + ".student.lth.se";
+		String hostname = "argus-" + ((camNbr + 1) * 2) + ".student.lth.se";
 		System.out.println(hostname);
 		System.out.println(8080 + (camNbr * 2) + 1);
-//		cam.setProxy(hostname, 8080 + (camNbr * 2) + 1); //This is for proxy camera
+		// cam.setProxy(hostname, 8080 + (camNbr * 2) + 1); //This is for proxy
+		// camera
 		cam.connect();
-		while(!Thread.interrupted()) {
+		while (!Thread.interrupted()) {
 			System.out.println("Reading image");
 			byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
 			int pos = cam.getJPEG(jpeg, 0);
@@ -48,7 +62,7 @@ public class ReadImageThread extends Thread{
 			}
 			sm.readImage(imageBuffer, motionDetected);
 		}
-		
+
 		cam.close();
 		cam.destroy();
 	}

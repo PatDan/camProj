@@ -1,21 +1,31 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 
 import Util.Util;
-import client.Picture;
 
 public class ClientReaderThread extends Thread {
 	private ServerMonitor monitor;
 	private InputStream in;
 
+	/**
+	 * Reading messages from the client
+	 * 
+	 * @param serverMonitor
+	 *            - the server monitor handling movie mode
+	 * @param in
+	 *            - the inputstream from the client
+	 */
 	public ClientReaderThread(ServerMonitor serverMonitor, InputStream in) {
 		this.monitor = serverMonitor;
 		this.in = in;
 	}
 
+	/**
+	 * Reads messages from the client containing state changes. Changes the
+	 * state of the monitor accordingly
+	 */
 	public void run() {
 		while (true) {
 			byte[] l = new byte[4];

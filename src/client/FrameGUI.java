@@ -11,11 +11,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-
-import server.ServerMonitor;
 
 public class FrameGUI extends JFrame {
 	private String[] syncBoxes = { "synchronized", "asynchronized" };

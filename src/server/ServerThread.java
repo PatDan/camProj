@@ -11,10 +11,14 @@ public class ServerThread extends Thread {
 	private ServerMonitor monitor;
 	private ServerSocket serverSocket;
 
+	/**
+	 * Sets up server sockets
+	 * @param monitor - the server monitor corresponding to the server sockets
+	 * @param port - the port for the server to run on
+	 */
 	public ServerThread(ServerMonitor monitor, int port) {
 		this.port = port;
 		this.monitor = monitor;
-		System.out.println("Creating server socket");
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
@@ -23,11 +27,12 @@ public class ServerThread extends Thread {
 		}
 	}
 
+	/**
+	 * Starts the server and accepts one client
+	 */
 	public void run() {
 		try {
-			System.out.println("Server on port " + port);
 			Socket clientSocket = serverSocket.accept();
-			System.out.println("Accepted client");
 			OutputStream out = clientSocket.getOutputStream();
 			InputStream in = clientSocket.getInputStream();
 			monitor.connect(in, out);
