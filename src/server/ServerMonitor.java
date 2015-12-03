@@ -3,10 +3,6 @@ package server;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import Util.Util;
-//import se.lth.cs.eda040.proxycamera.AxisM3006V; //This is for proxy camera
-import se.lth.cs.eda040.fakecamera.AxisM3006V; //This is for fake cameraM30
-
 public class ServerMonitor {
 	public static final int IDLE_MODE = 1;
 	public static final int MOVIE_MODE = 2;
@@ -28,6 +24,7 @@ public class ServerMonitor {
 
 	synchronized void connect(InputStream in, OutputStream out) {
 		new ClientReaderThread(this, in).start();
+		new ReadImageThread(this, thisCamNbr).start();
 		new ServerWriterThread(this, out, thisCamNbr).start();
 	}
 
@@ -38,10 +35,6 @@ public class ServerMonitor {
 	synchronized void updateMode(int mode) {
 		this.movieMode = mode;
 		notifyAll();
-	}
-
-	synchronized void cameraConnect(AxisM3006V cam) {
-		new ReadImageThread(this, cam).start();
 	}
 
 	synchronized void readImage(byte[] imageBuffer, boolean motionDetected) {

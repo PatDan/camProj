@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 
-//import se.lth.cs.eda040.proxycamera.AxisM3006V; //This is for proxy camera
-import se.lth.cs.eda040.fakecamera.AxisM3006V; //This is for fake cameraM3006V;
+import se.lth.cs.eda040.proxycamera.AxisM3006V; //This is for proxy camera
+//import se.lth.cs.eda040.fakecamera.AxisM3006V; //This is for fake cameraM3006V;
 
 public class ServerWriterThread extends Thread{
 	private ServerMonitor monitor;
@@ -15,20 +15,10 @@ public class ServerWriterThread extends Thread{
 	public ServerWriterThread(ServerMonitor serverMonitor, OutputStream out, int camNbr) {
 		this.monitor = serverMonitor;
 		this.out = out;
-		this.camNbr = camNbr;
 	}
 
 	public void run() {
-		AxisM3006V cam = new AxisM3006V();
-		cam = new AxisM3006V();
-		cam.init();
-		String hostname = "argus-" + ((camNbr + 1)*2) + ".student.lth.se";
-		System.out.println(hostname);
-		System.out.println(8080 + (camNbr * 2) + 1);
-//		cam.setProxy(hostname, 8080 + (camNbr * 2) + 1); //This is for proxy camera
-		cam.connect();
-		monitor.cameraConnect(cam);
-		while(!Thread.interrupted()) {
+		while(true) {
 			try {
 				byte[] msg = monitor.image();
 				out.write(msg[0]);
@@ -42,7 +32,5 @@ public class ServerWriterThread extends Thread{
 				e.printStackTrace();
 			}
 		}
-		cam.close();
-		cam.destroy();
 	}
 }
