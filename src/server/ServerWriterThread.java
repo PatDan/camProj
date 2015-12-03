@@ -27,9 +27,10 @@ public class ServerWriterThread extends Thread{
 		System.out.println(8080 + (camNbr * 2) + 1);
 //		cam.setProxy(hostname, 8080 + (camNbr * 2) + 1); //This is for proxy camera
 		cam.connect();
+		monitor.cameraConnect(cam);
 		while(!Thread.interrupted()) {
 			try {
-				byte[] msg = monitor.image(cam);
+				byte[] msg = monitor.image();
 				out.write(msg[0]);
 				out.write(msg[1]);
 				out.write(msg[2]);
@@ -41,7 +42,6 @@ public class ServerWriterThread extends Thread{
 				e.printStackTrace();
 			}
 		}
-		
 		cam.close();
 		cam.destroy();
 	}

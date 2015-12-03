@@ -15,8 +15,8 @@ public class ClientMonitor {
 
 	private int movieMode = IDLE;
 	private int syncMode = SYNCHRONIZED;
-	private Picture[] imageBuffer1;
-	private Picture[] imageBuffer2;
+	private volatile Picture[] imageBuffer1;
+	private volatile Picture[] imageBuffer2;
 	private long[] delayTime = { -1, -1 };
 	private FrameGUI gui;
 	private int nextCam;
@@ -30,10 +30,10 @@ public class ClientMonitor {
 		gui = new FrameGUI(this);
 		imageBuffer1 = new Picture[0];
 		imageBuffer2 = new Picture[0];
-		new ClientThread(this, PORT_NUMBER, "localhost").start();
-		new SyncThread(this).start();
 		nextCam = 1;
 		autoSync = true;
+		new ClientThread(this, PORT_NUMBER, "localhost").start();
+		new SyncThread(this).start();
 	}
 
 	/**
@@ -45,10 +45,11 @@ public class ClientMonitor {
 	 *            - outputstream to camera server
 	 */
 	synchronized void connect(InputStream in, OutputStream out) {
+		int nextCam = this.nextCam;
+		this.nextCam++;
 		new ServerReaderThread(this, in, nextCam).start();
 		new ClientWriterThread(this, out, nextCam).start();
 		new ScreenThread(this, nextCam).start();
-		nextCam++;
 	}
 
 	/**
@@ -115,7 +116,6 @@ public class ClientMonitor {
 	 *            - The number of the camera adding an image
 	 */
 	synchronized void putImage(Picture image, int cam) {
-		delayTime[cam - 1] = System.currentTimeMillis() - image.getTime();
 		Picture[] imageBuffer = null;
 		switch (cam) {
 		case 1:
@@ -125,7 +125,10 @@ public class ClientMonitor {
 			imageBuffer = imageBuffer2;
 			break;
 		}
-
+		
+		if(imageBuffer == null) {
+			System.err.println("Oh no...." + cam);
+		}
 		Picture[] temp = new Picture[imageBuffer.length + 1];
 		for (int i = 0; i < imageBuffer.length; i++) {
 			temp[i] = imageBuffer[i];
@@ -147,6 +150,7 @@ public class ClientMonitor {
 			gui.updateMode(movieMode);
 			gui.activeCamera(cam);
 		}
+		delayTime[cam - 1] = System.currentTimeMillis() - image.getTime();
 
 		notifyAll();
 	}
