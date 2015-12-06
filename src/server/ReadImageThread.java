@@ -1,8 +1,8 @@
 package server;
 
 import Util.Util;
-import se.lth.cs.eda040.fakecamera.AxisM3006V;
-//import se.lth.cs.eda040.proxycamera.AxisM3006V;
+//import se.lth.cs.eda040.fakecamera.AxisM3006V;
+import se.lth.cs.eda040.proxycamera.AxisM3006V;
 
 public class ReadImageThread extends Thread {
 	private ServerMonitor sm;
@@ -15,7 +15,10 @@ public class ReadImageThread extends Thread {
 	 * @param sm
 	 *            - the server monitor to add the images
 	 * @param camNbr
-	 *            - the number of the camera
+	 *            - the number of the camera to be used. Using
+	 *            argus-camNbr.student.lth.se
+	 * @param port
+	 *            - the port used on the camera
 	 */
 	public ReadImageThread(ServerMonitor sm, int camNbr, int port) {
 		this.sm = sm;
@@ -34,7 +37,7 @@ public class ReadImageThread extends Thread {
 		String hostname = "argus-" + camNbr + ".student.lth.se";
 		System.out.println(hostname);
 		System.out.println(port);
-		// cam.setProxy(hostname, port); //This is for proxy camera
+		cam.setProxy(hostname, port); // This is for proxy camera
 		cam.connect();
 		while (!Thread.interrupted()) {
 			System.out.println("Reading image");
@@ -67,11 +70,13 @@ public class ReadImageThread extends Thread {
 		cam.close();
 		cam.destroy();
 	}
+
 	/**
 	 * A method to extract the image from the package.
+	 * 
 	 * @param jpeg
 	 * @param pos
-	 * @return image 
+	 * @return image
 	 */
 	private byte[] trim(byte[] jpeg, int pos) {
 		byte[] image = new byte[pos + 1];

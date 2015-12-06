@@ -48,9 +48,9 @@ public static void main(String[] args) {
 				JTextField field3 = new JTextField();
 				JTextField field4 = new JTextField();
 				Object[] message = {
-				    "Enter Number for First Camera", field1,
+				    "Enter Number for First Camera 1-8: \nargus-N.student.lth.se will be used", field1,
 				    "Enter Port number for first Camera:", field2,
-				    "Enter Number for Second Camera:", field3,
+				    "Enter Number for Second Camera 1-8: \nargus-N.student.lth.se will be used", field3,
 				    "Enter Port Number for second Camera:", field4,
 				};
 				int option = JOptionPane.showConfirmDialog(inputPanel, message, "Enter all your values", JOptionPane.OK_CANCEL_OPTION);

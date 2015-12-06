@@ -16,6 +16,13 @@ public class ServerMonitor {
 
 	/**
 	 * The server monitor handling movie mode and sending images
+	 * 
+	 * @param camNbr
+	 *            - the number of the camera to be used.
+	 *            argus-camNbr.student.lth.se
+	 * 
+	 * @param port
+	 *            - the port used by the camera
 	 */
 	public ServerMonitor(int camNbr, int port) {
 		movieMode = IDLE_MODE;
@@ -86,8 +93,8 @@ public class ServerMonitor {
 	}
 
 	/**
-	 * Returns the image in the image buffer. If in idle mode, returns image every
-	 * five second
+	 * Returns the image in the image buffer. If in idle mode, returns image
+	 * every five second
 	 * 
 	 * @return - the image from the image buffer
 	 */
