@@ -35,8 +35,8 @@ public static void main(String[] args) {
 				}
 				}
 				
-				ServerMonitor sm = new ServerMonitor();
-				ServerMonitor sm2 = new ServerMonitor();
+				ServerMonitor sm = new ServerMonitor(input[0], input[1]);
+				ServerMonitor sm2 = new ServerMonitor(input[2], input[3]);
 				ClientMonitor am = new ClientMonitor();
 
 			}

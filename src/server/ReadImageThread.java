@@ -7,6 +7,7 @@ import se.lth.cs.eda040.fakecamera.AxisM3006V;
 public class ReadImageThread extends Thread {
 	private ServerMonitor sm;
 	private int camNbr;
+	private int port;
 
 	/**
 	 * Reads images from the camera
@@ -16,9 +17,10 @@ public class ReadImageThread extends Thread {
 	 * @param camNbr
 	 *            - the number of the camera
 	 */
-	public ReadImageThread(ServerMonitor sm, int camNbr) {
+	public ReadImageThread(ServerMonitor sm, int camNbr, int port) {
 		this.sm = sm;
 		this.camNbr = camNbr;
+		this.port = port;
 	}
 
 	/**
@@ -29,11 +31,10 @@ public class ReadImageThread extends Thread {
 		AxisM3006V cam = new AxisM3006V();
 		cam = new AxisM3006V();
 		cam.init();
-		String hostname = "argus-" + ((camNbr + 1) * 2) + ".student.lth.se";
+		String hostname = "argus-" + camNbr + ".student.lth.se";
 		System.out.println(hostname);
-		System.out.println(8080 + (camNbr * 2) + 1);
-		// cam.setProxy(hostname, 8080 + (camNbr * 2) + 1); //This is for proxy
-		// camera
+		System.out.println(port);
+		// cam.setProxy(hostname, port); //This is for proxy camera
 		cam.connect();
 		while (!Thread.interrupted()) {
 			System.out.println("Reading image");

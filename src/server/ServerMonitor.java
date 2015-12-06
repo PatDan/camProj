@@ -8,21 +8,23 @@ public class ServerMonitor {
 	public static final int MOVIE_MODE = 2;
 	private int movieMode;
 	private long lastSentImage;
-	private static int camNbr = 0;
-	private int thisCamNbr;
+	private int camNbr;
+	private int port;
 	private boolean motionDetected;
 	private volatile byte[] imageBuffer;
+	private static int clientPort = 8080;
 
 	/**
 	 * The server monitor handling movie mode and sending images
 	 */
-	public ServerMonitor() {
+	public ServerMonitor(int camNbr, int port) {
 		movieMode = IDLE_MODE;
-		lastSentImage = System.currentTimeMillis() - 5000;
-		new ServerThread(this, 8080 + camNbr).start();
-		thisCamNbr = camNbr++;
 		motionDetected = false;
 		imageBuffer = null;
+		this.camNbr = camNbr;
+		this.port = port;
+		lastSentImage = System.currentTimeMillis() - 5000;
+		new ServerThread(this, clientPort++).start();
 	}
 
 	/**
@@ -36,7 +38,7 @@ public class ServerMonitor {
 	 */
 	synchronized void connect(InputStream in, OutputStream out) {
 		new ClientReaderThread(this, in).start();
-		new ReadImageThread(this, thisCamNbr).start();
+		new ReadImageThread(this, camNbr, port).start();
 		new ServerWriterThread(this, out).start();
 	}
 
