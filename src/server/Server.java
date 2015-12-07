@@ -68,6 +68,8 @@ public static void main(String[] args) {
 				    
 				}else if(option == JOptionPane.CANCEL_OPTION){
 					System.exit(0);
+				} else if(option == JOptionPane.CLOSED_OPTION) {
+					System.exit(0);
 				}
 				return null;
 			}
