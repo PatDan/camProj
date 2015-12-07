@@ -17,24 +17,27 @@ import javax.swing.border.EmptyBorder;
 public class FrameGUI extends JFrame {
 	private String[] syncBoxes = { "synchronized", "asynchronized" };
 	private String[] movieBoxes = { "idle", "movie" };
-	
 
 	JPanel jui = new JPanel(new GridLayout(1, 2));
 	JPanel vui = new JPanel(new GridLayout(1, 2));
 	private JCheckBox syncCheck[];
 	private JCheckBox movieCheck[];
 	private JCheckBox autoCheck;
-	
+
 	private ButtonGroup bgSync = new ButtonGroup();
 	private ButtonGroup bgMovie = new ButtonGroup();
 	private VideoPanel videoFrame1 = new VideoPanel();
 	private VideoPanel videoFrame2 = new VideoPanel();
 	private boolean isMode;
 	private ClientMonitor cm;
+
 	/**
-	 * This constructor draws up a combination of checkboxes and VideoPanels, and needs to recieve a clientmonitor as input
-	 * in order to create the necessary listeners for the checkboxes.
-	 * @param cm (ClientMonitor
+	 * This constructor draws up a combination of checkboxes and VideoPanels,
+	 * and needs to recieve a clientmonitor as input in order to create the
+	 * necessary listeners for the checkboxes.
+	 * 
+	 * @param cm
+	 *            (ClientMonitor
 	 */
 	public FrameGUI(ClientMonitor cm) {
 		this.cm = cm;
@@ -53,15 +56,14 @@ public class FrameGUI extends JFrame {
 		jui.add(new JLabel("Sync mode"));
 
 		setUIFont(new javax.swing.plaf.FontUIResource("Arial", Font.BOLD, 12));
-		
+
 		autoCheck = new JCheckBox("auto");
 		autoCheck.setBorder(new EmptyBorder(0, 0, 0, 0));
 		autoCheck.setBackground(Color.gray);
 		autoCheck.setSelected(true);
 		autoCheck.addItemListener(new AutoListener(cm));
 		jui.add(autoCheck);
-		
-		
+
 		isMode = true;
 		for (int i = 0; i < syncBoxes.length; i++) {
 			createCheckBoxes(i, syncBoxes, syncCheck, bgSync);
@@ -85,12 +87,21 @@ public class FrameGUI extends JFrame {
 		setSize(1280, 620);
 		setVisible(true);
 		setResizable(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				cm.close();
+				System.exit(0);
+			}
+		});
 
 	}
+
 	/**
-	 * Method to create different fonts in the GUI. The desired font is the input for this method.
-	 * @param f 
+	 * Method to create different fonts in the GUI. The desired font is the
+	 * input for this method.
+	 * 
+	 * @param f
 	 */
 	private static void setUIFont(javax.swing.plaf.FontUIResource f) {
 		java.util.Enumeration keys = UIManager.getDefaults().keys();
@@ -101,10 +112,14 @@ public class FrameGUI extends JFrame {
 				UIManager.put(key, f);
 		}
 	}
+
 	/**
-	 * A private method used when creating the checkboxes and placing them in corresponding button groups. Recieves the amount of
-	 * boxes, the names of the boxes in the order they need to be created, the corresponding box vector that the are to be placed in, and lastly
-	 * the corresponding buttongroup that they adhere to.
+	 * A private method used when creating the checkboxes and placing them in
+	 * corresponding button groups. Recieves the amount of boxes, the names of
+	 * the boxes in the order they need to be created, the corresponding box
+	 * vector that the are to be placed in, and lastly the corresponding
+	 * buttongroup that they adhere to.
+	 * 
 	 * @param i
 	 * @param names
 	 * @param boxes
@@ -119,16 +134,22 @@ public class FrameGUI extends JFrame {
 		bg.add(boxes[i]);
 		jui.add(boxes[i]);
 	}
+
 	/**
-	 * This is a method used by the monitor to update the mode, thus changing which of the checkboxes is highlighted. Input is the
-	 * selected checkbox to highlight.
+	 * This is a method used by the monitor to update the mode, thus changing
+	 * which of the checkboxes is highlighted. Input is the selected checkbox to
+	 * highlight.
+	 * 
 	 * @param mode
 	 */
 	public void updateMode(int mode) {
 		movieCheck[mode - 1].setSelected(true);
 	}
+
 	/**
-	 * A method to indicate which camera caused the recent change in modes. Input is the panel that is specified to blink.
+	 * A method to indicate which camera caused the recent change in modes.
+	 * Input is the panel that is specified to blink.
+	 * 
 	 * @param panel
 	 */
 	public void activeCamera(int panel) {
@@ -141,9 +162,12 @@ public class FrameGUI extends JFrame {
 			break;
 		}
 	}
+
 	/**
-	 * A method to send images to the corresponding VideoPanel and update the gui. The inputs are the picture that is to be displayed and 
-	 * the frame it is to be displayed on.
+	 * A method to send images to the corresponding VideoPanel and update the
+	 * gui. The inputs are the picture that is to be displayed and the frame it
+	 * is to be displayed on.
+	 * 
 	 * @param p
 	 * @param frame
 	 */
@@ -157,7 +181,8 @@ public class FrameGUI extends JFrame {
 			break;
 		}
 	}
+
 	public void changeSyncMode(int mode) {
-		syncCheck[mode - 1].setSelected(true);	
+		syncCheck[mode - 1].setSelected(true);
 	}
 }

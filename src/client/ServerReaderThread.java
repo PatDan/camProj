@@ -32,6 +32,8 @@ public class ServerReaderThread extends Thread {
 	 */
 	public void run() {
 		while (true) {
+
+//			System.out.println("my mother said yes: ");
 			byte[] l = new byte[4];
 			try {
 				l[0] = (byte) in.read();
@@ -43,7 +45,10 @@ public class ServerReaderThread extends Thread {
 			}
 
 			int size = Util.byteToInt(l);
-
+			if(size < 0){
+				System.err.println("Server has unexpectedly shutdown");
+				System.exit(1);
+			}
 			byte[] msg = new byte[size];
 			int read = 0;
 			try {

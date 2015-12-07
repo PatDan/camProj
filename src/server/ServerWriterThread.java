@@ -21,7 +21,7 @@ public class ServerWriterThread extends Thread{
 	 * Sends an image to the client every time an image is available
 	 */
 	public void run() {
-		while(true) {
+		while(monitor.isConnected()) {
 			try {
 				byte[] msg = monitor.image();
 				out.write(msg[0]);
@@ -31,8 +31,9 @@ public class ServerWriterThread extends Thread{
 				out.write(msg,4,msg.length-4);
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(!monitor.isConnected()) {
+					System.out.println("Client disconnected");
+				}
 			}
 		}
 	}

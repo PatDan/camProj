@@ -6,9 +6,9 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientThread extends Thread {
-	private int port;
+	private int[] port;
 	private ClientMonitor monitor;
-	private String hostName;
+	private String[] hostName;
 	private Socket clientSocket;
 
 	/**
@@ -18,7 +18,7 @@ public class ClientThread extends Thread {
 	 * @param port
 	 * @param hostName
 	 */
-	public ClientThread(ClientMonitor monitor, int port, String hostName) {
+	public ClientThread(ClientMonitor monitor, int[] port, String[] hostName) {
 		this.port = port;
 		this.monitor = monitor;
 		this.hostName = hostName;
@@ -31,15 +31,16 @@ public class ClientThread extends Thread {
 	 * Attempts connection with two cameras at port 8080 and 8081
 	 */
 	public void run() {
-		while (port < 8082) {
+		int i = 0;
+		while (i < 2) {
 			try {
-				clientSocket = new Socket("localhost", port);
+				clientSocket = new Socket(hostName[i], port[i]);
 				OutputStream out = clientSocket.getOutputStream();
 				InputStream in = clientSocket.getInputStream();
-				monitor.connect(in, out);
-				port++;
+				monitor.connect(in, out, clientSocket);
+				i++;
 			} catch (IOException e) {
-				System.err.println("No new camera");
+//				System.err.println("No new camera");
 			}
 		}
 

@@ -1,36 +1,45 @@
 package client;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 
 public class ClientMonitor {
 	public static int PORT_NUMBER = 8080;
 	public static final int IDLE = 1;
 	public static final int MOVIE = 2;
+	public static final int DISCONNECT = -1;
 	public static final int SYNCHRONIZED = 1;
 	public static final int ASYNCHRONIZED = 2;
 
 	private int movieMode = IDLE;
 	private int syncMode = SYNCHRONIZED;
+	
 	private volatile Picture[] imageBuffer1;
 	private volatile Picture[] imageBuffer2;
 	private long[] delayTime = { -1, -1 };
 	private FrameGUI gui;
 	private int nextCam;
 	private boolean autoSync;
+	private Socket socket;
+	private int[] ports;
+	private String[] cameras;
 
 	/**
 	 * Monitor for the client. Handles buffers for the cameras, mode for
 	 * synchronization and mode for sending images.
 	 */
-	public ClientMonitor() {
+	public ClientMonitor(int[] ports, String[] cameras) {
 		// System.out.println("Starting client thread");
 		gui = new FrameGUI(this);
 		imageBuffer1 = new Picture[0];
 		imageBuffer2 = new Picture[0];
 		nextCam = 1;
 		autoSync = true;
-		new ClientThread(this, PORT_NUMBER, "localhost").start();
+		this.ports = ports;
+		this.cameras = cameras;
+		new ClientThread(this, ports, cameras).start();
 		new SyncThread(this).start();
 	}
 
@@ -42,12 +51,18 @@ public class ClientMonitor {
 	 * @param out
 	 *            - outputstream to camera server
 	 */
-	synchronized void connect(InputStream in, OutputStream out) {
+	synchronized void connect(InputStream in, OutputStream out, Socket socket) {
+		this.socket = socket;
 		int nextCam = this.nextCam;
 		this.nextCam++;
 		new ServerReaderThread(this, in, nextCam).start();
 		new ClientWriterThread(this, out).start();
 		new ScreenThread(this, nextCam).start();
+	}
+
+	synchronized void close() {
+		movieMode = DISCONNECT;
+		notifyAll();
 	}
 
 	/**

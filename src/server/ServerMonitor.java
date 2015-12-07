@@ -2,10 +2,12 @@ package server;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 
 public class ServerMonitor {
 	public static final int IDLE_MODE = 1;
 	public static final int MOVIE_MODE = 2;
+	public static final int DISCONNECT = -1;
 	private int movieMode;
 	private long lastSentImage;
 	private int camNbr;
@@ -13,6 +15,10 @@ public class ServerMonitor {
 	private boolean motionDetected;
 	private volatile byte[] imageBuffer;
 	private static int clientPort = 8080;
+	private ClientReaderThread crt;
+	private ReadImageThread rit;
+	private ServerWriterThread swt;
+	private boolean connected = false;
 
 	/**
 	 * The server monitor handling movie mode and sending images
@@ -25,7 +31,7 @@ public class ServerMonitor {
 	 *            - the port used by the camera
 	 */
 	public ServerMonitor(int camNbr, int port) {
-		movieMode = IDLE_MODE;
+		movieMode = DISCONNECT;
 		motionDetected = false;
 		imageBuffer = null;
 		this.camNbr = camNbr;
@@ -44,9 +50,25 @@ public class ServerMonitor {
 	 *            - the outputstream to the client
 	 */
 	synchronized void connect(InputStream in, OutputStream out) {
-		new ClientReaderThread(this, in).start();
-		new ReadImageThread(this, camNbr, port).start();
-		new ServerWriterThread(this, out).start();
+		movieMode = IDLE_MODE;
+		connected = true;
+		(crt = new ClientReaderThread(this, in, this)).start();
+		(rit = new ReadImageThread(this, camNbr, port)).start();
+		(swt = new ServerWriterThread(this, out)).start();
+		try {
+			while(movieMode != DISCONNECT) wait();
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	synchronized void disconnect() {
+		connected = false;
+		notifyAll();
+	}
+
+	synchronized boolean isConnected() {
+		return connected;
 	}
 
 	/**
@@ -66,6 +88,9 @@ public class ServerMonitor {
 	 */
 	synchronized void updateMode(int mode) {
 		this.movieMode = mode;
+		if(movieMode == DISCONNECT){
+			connected = false;
+		}
 		notifyAll();
 	}
 
@@ -99,7 +124,6 @@ public class ServerMonitor {
 	 * @return - the image from the image buffer
 	 */
 	synchronized byte[] image() {
-		System.out.println("Trying to send image...");
 		try {
 			long t1;
 			while (movieMode == IDLE_MODE && lastSentImage + 5000 > (t1 = System.currentTimeMillis())
@@ -112,7 +136,6 @@ public class ServerMonitor {
 			System.out.println("Server interrupted while waiting for image");
 		}
 		lastSentImage = System.currentTimeMillis();
-		System.out.println("Sending image");
 		byte[] ret = imageBuffer;
 		imageBuffer = null;
 		notifyAll();
