@@ -8,7 +8,10 @@ import javax.swing.SwingUtilities;
 import server.ServerMonitor;
 
 public class Server {
-
+	
+ /**
+  * The main method for real camera
+  */
 public static void main(String[] args) {
 		
 		Runnable r = new Runnable() {

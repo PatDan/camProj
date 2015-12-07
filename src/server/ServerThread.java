@@ -31,7 +31,8 @@ public class ServerThread extends Thread {
 	}
 
 	/**
-	 * Starts the server and accepts one client
+	 * Starts the server and accepts a client. When client disconnects a new
+	 * client can be accpeted
 	 */
 	public void run() {
 		while (true) {

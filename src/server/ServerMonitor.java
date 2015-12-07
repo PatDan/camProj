@@ -64,11 +64,18 @@ public class ServerMonitor {
 		}
 	}
 
+	/**
+	 * Used when client disconnects
+	 */
 	synchronized void disconnect() {
 		connected = false;
 		notifyAll();
 	}
 
+	/**
+	 * Checks if a client is connected
+	 * @return
+	 */
 	synchronized boolean isConnected() {
 		return connected;
 	}

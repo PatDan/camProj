@@ -14,9 +14,9 @@ public class ClientThread extends Thread {
 	/**
 	 * Handles connecting to camera servers
 	 * 
-	 * @param monitor
-	 * @param port
-	 * @param hostName
+	 * @param monitor - the client monitor
+	 * @param port - ports to be used
+	 * @param hostName - host names to be used
 	 */
 	public ClientThread(ClientMonitor monitor, int[] port, String[] hostName) {
 		this.port = port;
@@ -28,7 +28,7 @@ public class ClientThread extends Thread {
 	}
 
 	/**
-	 * Attempts connection with two cameras at port 8080 and 8081
+	 * Attempts connection with two cameras at port the given ports
 	 */
 	public void run() {
 		int i = 0;

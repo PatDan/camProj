@@ -15,7 +15,7 @@ public class ClientMonitor {
 
 	private int movieMode = IDLE;
 	private int syncMode = SYNCHRONIZED;
-	
+
 	private volatile Picture[] imageBuffer1;
 	private volatile Picture[] imageBuffer2;
 	private long[] delayTime = { -1, -1 };
@@ -49,6 +49,8 @@ public class ClientMonitor {
 	 *            - inputstream from camera server
 	 * @param out
 	 *            - outputstream to camera server
+	 * @param socket
+	 *            - the socket the client is connected to
 	 */
 	synchronized void connect(InputStream in, OutputStream out, Socket socket) {
 		this.socket = socket;
@@ -59,6 +61,9 @@ public class ClientMonitor {
 		new ScreenThread(this, nextCam).start();
 	}
 
+	/**
+	 * Disconnects the client when GUI is closed
+	 */
 	synchronized void close() {
 		movieMode = DISCONNECT;
 		notifyAll();
@@ -289,7 +294,7 @@ public class ClientMonitor {
 	}
 
 	/**
-	 * Controlls if synchronization mode is auto
+	 * Controls if synchronization mode is auto
 	 * 
 	 * @param autoSync
 	 *            - true if auto else false
