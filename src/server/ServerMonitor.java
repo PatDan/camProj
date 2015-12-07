@@ -37,6 +37,8 @@ public class ServerMonitor {
 		this.camNbr = camNbr;
 		this.port = port;
 		lastSentImage = System.currentTimeMillis() - 5000;
+		String hostname = "argus-" + camNbr + ".student.lth.se";
+		System.out.println("Running on: " + hostname + ":" + port);
 		new ServerThread(this, clientPort++).start();
 	}
 

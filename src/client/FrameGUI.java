@@ -87,7 +87,6 @@ public class FrameGUI extends JFrame {
 		setSize(1280, 620);
 		setVisible(true);
 		setResizable(true);
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				cm.close();

@@ -1,8 +1,8 @@
 package server;
 
 import Util.Util;
-import se.lth.cs.eda040.fakecamera.AxisM3006V;
-//import se.lth.cs.eda040.proxycamera.AxisM3006V;
+//import se.lth.cs.eda040.fakecamera.AxisM3006V;
+import se.lth.cs.eda040.proxycamera.AxisM3006V;
 
 public class ReadImageThread extends Thread {
 	private ServerMonitor sm;
@@ -35,8 +35,7 @@ public class ReadImageThread extends Thread {
 		cam = new AxisM3006V();
 		cam.init();
 		String hostname = "argus-" + camNbr + ".student.lth.se";
-		System.out.println("Connecting to: " + hostname + ":" + port);
-//		cam.setProxy(hostname, port); // This is for proxy camera
+		cam.setProxy(hostname, port); // This is for proxy camera
 		cam.connect();
 		while (sm.isConnected()) {
 			byte[] jpeg = new byte[AxisM3006V.IMAGE_BUFFER_SIZE];
@@ -65,7 +64,6 @@ public class ReadImageThread extends Thread {
 			sm.readImage(imageBuffer, motionDetected);
 		}
 		
-		System.out.println("ReadImage shutdown");
 		cam.close();
 		cam.destroy();
 	}

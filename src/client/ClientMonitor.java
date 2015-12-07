@@ -31,7 +31,6 @@ public class ClientMonitor {
 	 * synchronization and mode for sending images.
 	 */
 	public ClientMonitor(int[] ports, String[] cameras) {
-		// System.out.println("Starting client thread");
 		gui = new FrameGUI(this);
 		imageBuffer1 = new Picture[0];
 		imageBuffer2 = new Picture[0];
@@ -115,7 +114,6 @@ public class ClientMonitor {
 	 */
 	synchronized void changeSync(int sync) {
 		if (autoSync && movieMode == MOVIE) {
-			System.out.println("Changeing mode to: " + sync);
 			forceSync(sync);
 		}
 	}

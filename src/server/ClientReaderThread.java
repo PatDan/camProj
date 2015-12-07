@@ -55,7 +55,6 @@ public class ClientReaderThread extends Thread {
 					}
 					read += n;
 				}
-				System.out.println("Read = " + read);
 				read = 0;
 				while (read != 8) {
 					int n = in.read(time, read, 8 - read);
@@ -65,7 +64,6 @@ public class ClientReaderThread extends Thread {
 					}
 					read += n;
 				}
-				System.out.println("Read2 = " + read);
 
 			} catch (IOException e) {
 				if(!sm.isConnected()) {
