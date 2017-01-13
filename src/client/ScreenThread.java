@@ -26,4 +26,4 @@ public class ScreenThread extends Thread {
 			cm.updateScreen(cam);
 		}
 	}
-}
+
